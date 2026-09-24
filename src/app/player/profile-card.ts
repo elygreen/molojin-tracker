@@ -56,130 +56,123 @@ import { GameIcon } from '../ui/game-icon';
   `,
   styles: `
     :host {
-      display: grid;
-      grid-template-columns: 1fr minmax(260px, 340px);
-      gap: 16px;
-      align-items: center;
-    }
-    @media (max-width: 640px) {
-      :host {
-        grid-template-columns: 1fr;
-      }
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     .who {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       min-width: 0;
     }
     .avatar {
       position: relative;
       flex: none;
-      --icon-size: 84px;
-      --icon-radius: 14px;
+      --icon-size: 52px;
+      --icon-radius: 10px;
     }
     .avatar app-game-icon {
       border: var(--line) solid var(--ink);
     }
     .level {
       position: absolute;
-      bottom: -10px;
+      bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--ink);
       color: var(--butter);
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      padding: 1px 8px;
+      padding: 0 6px;
       border-radius: 99px;
     }
     h1 {
       margin: 0;
       font-family: var(--font-display);
-      font-size: clamp(1.6rem, 5vw, 2.3rem);
+      font-size: 1.3rem;
       font-weight: 400;
-      line-height: 1.05;
+      line-height: 1.1;
       overflow-wrap: anywhere;
     }
     .tag {
       color: var(--ink-soft);
-      font-size: 0.6em;
-      margin-left: 4px;
+      font-size: 0.65em;
+      margin-left: 3px;
     }
     .meta {
-      margin: 6px 0 0;
+      margin: 3px 0 0;
       color: var(--ink-soft);
-      font-size: 0.85rem;
+      font-size: 0.72rem;
     }
     .rank {
       background: var(--butter);
       border: var(--line) solid var(--ink);
-      border-radius: 10px;
-      padding: 10px 14px 14px;
+      border-radius: 8px;
+      padding: 8px 10px 10px;
     }
     .queue-label {
       font-family: var(--font-display);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      font-size: 0.85rem;
-      margin-bottom: 8px;
+      font-size: 0.7rem;
+      margin-bottom: 6px;
     }
     .rank-body {
       display: flex;
-      gap: 14px;
+      gap: 10px;
       align-items: center;
     }
     .emblem {
       flex: none;
-      width: 64px;
-      height: 64px;
+      width: 44px;
+      height: 44px;
       display: grid;
       place-items: center;
       background: var(--tier);
-      border: var(--line) solid var(--ink);
       clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
       position: relative;
     }
     .emblem::after {
       content: '';
       position: absolute;
-      inset: 5px;
-      clip-path: inherit;
-      border: 2px solid rgb(255 255 255 / 0.5);
-      background: linear-gradient(160deg, rgb(255 255 255 / 0.35), transparent 60%);
+      inset: 0;
+      background: linear-gradient(160deg, rgb(255 255 255 / 0.4), transparent 60%);
     }
     .emblem span {
       font-family: var(--font-display);
       color: #fff;
-      font-size: 1.35rem;
-      text-shadow: 0 2px 0 var(--ink);
+      font-size: 0.95rem;
+      text-shadow: 0 1px 0 var(--ink);
       z-index: 1;
     }
     .rank-text {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
       flex: 1;
       min-width: 0;
+      font-size: 0.8rem;
     }
     .rank-text strong {
       font-family: var(--font-display);
       font-weight: 400;
-      font-size: 1.35rem;
+      font-size: 1.05rem;
+      line-height: 1.1;
     }
     .lp {
       font-weight: 700;
     }
     .record {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       color: var(--ink-soft);
     }
     .record b {
       color: var(--ink);
     }
     .bar {
-      margin-top: 6px;
-      height: 12px;
+      margin-top: 4px;
+      height: 8px;
       border: 2px solid var(--ink);
       border-radius: 99px;
       background: var(--loss);

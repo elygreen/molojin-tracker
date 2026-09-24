@@ -66,36 +66,30 @@ interface ChampLine {
     </section>
   `,
   styles: `
+    /* One column in the sidebar; three across once the page stacks on tablets. */
     :host {
       display: grid;
-      grid-template-columns: 1.1fr 1.2fr 1fr;
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+      --donut-size: 64px;
     }
-    @media (max-width: 760px) {
+    @media (min-width: 560px) and (max-width: 860px) {
       :host {
-        grid-template-columns: 1fr 1fr;
-      }
-      .record {
-        grid-column: 1 / -1;
-      }
-    }
-    @media (max-width: 480px) {
-      :host {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
     .panel {
       background: var(--cream);
       border: var(--line) solid var(--ink);
-      border-radius: 10px;
-      padding: 12px 14px;
+      border-radius: 8px;
+      padding: 8px 10px;
       min-width: 0;
     }
     h3 {
-      margin: 0 0 10px;
+      margin: 0 0 6px;
       font-family: var(--font-display);
       font-weight: 400;
-      font-size: 0.95rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -105,35 +99,35 @@ interface ChampLine {
     .record-body {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
     .wl {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       color: var(--ink-soft);
     }
     .kda-line {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 0.85rem;
     }
     .d {
       color: var(--loss-ink);
     }
     .kda {
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: 0.95rem;
     }
     .kp {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       color: var(--ink-soft);
     }
     .champ {
       display: grid;
       grid-template-columns: auto 1fr auto;
       grid-template-rows: auto auto;
-      column-gap: 10px;
+      column-gap: 8px;
       align-items: center;
-      padding: 5px 0;
-      --icon-size: 34px;
+      padding: 3px 0;
+      --icon-size: 26px;
       --icon-radius: 50%;
     }
     .champ + .champ {
@@ -145,14 +139,14 @@ interface ChampLine {
     }
     .champ-name {
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.78rem;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .champ-wr {
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.78rem;
       text-align: right;
     }
     .champ-wr.hot {
@@ -164,19 +158,22 @@ interface ChampLine {
     }
     .champ-kda {
       grid-column: 2 / -1;
-      font-size: 0.78rem;
+      font-size: 0.68rem;
       color: var(--ink-soft);
     }
     .role {
       display: grid;
-      grid-template-columns: 58px 1fr 24px;
+      grid-template-columns: 48px 1fr 20px;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      font-size: 0.85rem;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-size: 0.72rem;
+    }
+    .role:last-child {
+      margin-bottom: 0;
     }
     .role-bar {
-      height: 14px;
+      height: 9px;
       border: 2px solid var(--ink);
       border-radius: 99px;
       background: var(--slot);

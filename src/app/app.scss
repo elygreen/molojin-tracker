@@ -1,6 +1,6 @@
 :host {
   display: block;
-  padding: 24px 16px 40px;
+  padding: 16px 16px 28px;
 }
 @media (max-width: 520px) {
   :host {
@@ -9,11 +9,11 @@
 }
 
 .frame {
-  max-width: 1080px;
+  max-width: 1240px;
   margin: 0 auto;
   background: var(--navy);
-  border-radius: 34px;
-  padding: 18px;
+  border-radius: 24px;
+  padding: 12px;
 }
 @media (max-width: 520px) {
   .frame {
@@ -24,22 +24,22 @@
 
 .sheet {
   background: var(--grain), var(--peri);
-  border-radius: 20px;
-  padding: 26px clamp(12px, 3vw, 30px) 20px;
+  border-radius: 14px;
+  padding: 16px clamp(10px, 2vw, 20px) 14px;
 }
 
 .masthead {
   background: var(--grain), var(--butter);
   border: var(--line) solid var(--ink);
   border-radius: 12px;
-  padding: 14px 16px 18px;
+  padding: 8px 14px 10px;
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 }
 .kicker {
   margin: 0 0 2px;
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-soft);
@@ -48,7 +48,7 @@ h1 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2rem, 7vw, 3.6rem);
+  font-size: clamp(1.5rem, 4.5vw, 2.3rem);
   line-height: 1;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -57,41 +57,41 @@ h1 {
 .tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 22px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
 .tabs a {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 0.85rem;
   letter-spacing: 0.04em;
   text-decoration: none;
   color: var(--ink);
   background: var(--cream);
   border: var(--line) solid var(--ink);
-  border-radius: 10px;
-  padding: 6px 14px;
-  box-shadow: 0 4px 0 var(--ink);
+  border-radius: 8px;
+  padding: 3px 10px;
+  box-shadow: 0 3px 0 var(--ink);
   transition: transform 0.1s, box-shadow 0.1s;
 }
 .tabs a span {
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--ink-soft);
   margin-left: 2px;
 }
 .tabs a:hover {
   transform: translateY(1px);
-  box-shadow: 0 3px 0 var(--ink);
+  box-shadow: 0 2px 0 var(--ink);
 }
 .tabs a.active {
   background: var(--butter);
-  transform: translateY(4px);
+  transform: translateY(3px);
   box-shadow: 0 0 0 var(--ink);
 }
 
 footer {
-  margin-top: 30px;
+  margin-top: 18px;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--ink-soft);
 }
