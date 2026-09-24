@@ -38,8 +38,8 @@ export type UpdateState =
       letter-spacing: 0.05em;
       text-transform: uppercase;
       white-space: nowrap;
-      color: var(--ink);
-      background: var(--butter);
+      color: #fff;
+      background: var(--win-ink);
       border: var(--line) solid var(--ink);
       border-radius: 8px;
       padding: 4px 14px;
@@ -64,7 +64,7 @@ export type UpdateState =
       outline-offset: 2px;
     }
     button.error {
-      background: var(--loss-tint);
+      background: var(--loss-ink);
     }
     .icon {
       display: inline-block;

@@ -37,8 +37,7 @@ const PAGE_SIZE = 20;
       }
       @case ('ready') {
         @let d = data()!;
-        <section class="lp-section">
-          <app-section-title text="LP tracker" wave="zigzag" tileColor="var(--c-green)" />
+        <section class="lp-section" aria-label="LP over time">
           <div class="card chart-card">
             <app-lp-chart [history]="d.rankHistory" />
           </div>
@@ -49,15 +48,14 @@ const PAGE_SIZE = 20;
             <app-profile-card [data]="d" />
           </section>
 
-          <section>
-            <app-section-title text="Recent form" wave="square" tileColor="var(--c-orange)" />
+          <section aria-label="Recent form">
             <app-recent-summary [matches]="d.matches" />
           </section>
         </aside>
 
         <section class="history">
           <div class="history-head">
-            <app-section-title class="flip tall" text="Match history" wave="tight" tileColor="var(--c-purple)" />
+            <app-section-title class="tall" text="Match history" [showTile]="false" />
             <app-update-button [state]="updateState()" [enabled]="canUpdate()" (pressed)="update()" />
           </div>
           <div class="matches">
