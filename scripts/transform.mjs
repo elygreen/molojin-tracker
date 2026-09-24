@@ -27,16 +27,58 @@ export function absoluteLp({ tier, rank, lp }) {
   return tierIndex * 400 + DIVISIONS.indexOf(rank) * 100 + lp;
 }
 
-function slimParticipant(p) {
+/**
+ * Bump when the stored match shape changes; the fetch script re-downloads
+ * matches saved under an older version. v2 added full per-player stats and
+ * team objectives for the match verdicts.
+ */
+export const MATCH_SCHEMA_VERSION = 2;
+
+const POSITIONS = ['TOP', 'JUNGLE', 'MIDDLE', 'BOTTOM', 'UTILITY'];
+
+function slimParticipant(p, index) {
+  const c = p.challenges ?? {};
   return {
     puuid: p.puuid,
     gameName: p.riotIdGameName ?? p.summonerName ?? '',
     tagLine: p.riotIdTagline ?? '',
     champion: p.championName,
     teamId: p.teamId,
+    // Riot lists each team top → support, which covers games with no teamPosition.
+    position: p.teamPosition || POSITIONS[index % 5],
     kills: p.kills,
     deaths: p.deaths,
     assists: p.assists,
+    level: p.champLevel,
+    gold: p.goldEarned,
+    cs: (p.totalMinionsKilled ?? 0) + (p.neutralMinionsKilled ?? 0),
+    damage: p.totalDamageDealtToChampions,
+    taken: (p.totalDamageTaken ?? 0) + (p.damageSelfMitigated ?? 0),
+    objDamage: p.damageDealtToObjectives ?? 0,
+    vision: p.visionScore ?? 0,
+    support: (p.totalHealsOnTeammates ?? 0) + (p.totalDamageShieldedOnTeammates ?? 0),
+    cc: p.timeCCingOthers ?? 0,
+    // Laning signals Riot derives from the timeline, so no extra request is needed.
+    laneLead: c.laningPhaseGoldExpAdvantage ?? null,
+    csLead: c.maxCsAdvantageOnLaneOpponent != null ? Math.round(c.maxCsAdvantageOnLaneOpponent) : null,
+    levelLead: c.maxLevelLeadLaneOpponent ?? null,
+  };
+}
+
+function slimTeam(t, participants) {
+  const o = t.objectives ?? {};
+  const members = participants.filter((p) => p.teamId === t.teamId);
+  return {
+    teamId: t.teamId,
+    win: t.win,
+    kills: o.champion?.kills ?? members.reduce((s, p) => s + p.kills, 0),
+    gold: members.reduce((s, p) => s + (p.goldEarned ?? 0), 0),
+    towers: o.tower?.kills ?? 0,
+    inhibitors: o.inhibitor?.kills ?? 0,
+    dragons: o.dragon?.kills ?? 0,
+    barons: o.baron?.kills ?? 0,
+    heralds: o.riftHerald?.kills ?? 0,
+    grubs: o.horde?.kills ?? 0,
   };
 }
 
@@ -95,7 +137,9 @@ export function slimMatch(match, puuid) {
     secondaryStyle: secondary?.style ?? null,
     teamId: me.teamId,
     participants: info.participants.map(slimParticipant),
+    teams: (info.teams ?? []).map((t) => slimTeam(t, info.participants)),
     lpChange: null,
+    v: MATCH_SCHEMA_VERSION,
   };
 }
 

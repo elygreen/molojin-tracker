@@ -8,6 +8,7 @@ import { LpChart } from './lp-chart';
 import { MatchCard } from './match-card';
 import { ProfileCard } from './profile-card';
 import { RecentSummary } from './recent-summary';
+import { VerdictBox } from './verdict-box';
 
 const PAGE_SIZE = 20;
 
@@ -15,7 +16,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-player-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, LpChart],
+  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, LpChart, VerdictBox],
   template: `
     @switch (state().status) {
       @case ('loading') {
@@ -55,7 +56,12 @@ const PAGE_SIZE = 20;
           <app-section-title class="flip" text="Match history" wave="tight" tileColor="var(--c-purple)" />
           <div class="matches">
             @for (m of visible(); track m.matchId) {
-              <app-match-card [match]="m" [puuid]="d.profile.puuid" />
+              <div class="match-row">
+                <div class="match-slot">
+                  <app-match-card [match]="m" [puuid]="d.profile.puuid" />
+                </div>
+                <app-verdict-box [match]="m" [puuid]="d.profile.puuid" />
+              </div>
             } @empty {
               <div class="card notice">No ranked solo games found yet.</div>
             }
@@ -126,6 +132,22 @@ const PAGE_SIZE = 20;
       flex-direction: column;
       gap: 6px;
       container-type: inline-size;
+    }
+    .match-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 92px;
+      gap: 6px;
+    }
+    /* Match rows size themselves against this slot, not the whole list. */
+    .match-slot {
+      container-type: inline-size;
+      min-width: 0;
+      display: grid;
+    }
+    @container (max-width: 480px) {
+      .match-row {
+        grid-template-columns: minmax(0, 1fr) 76px;
+      }
     }
     .more {
       display: block;

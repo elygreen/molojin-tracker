@@ -4,21 +4,27 @@
 //
 //   RIOT_API_KEY=... node scripts/fetch-matches.mjs
 //
-// Optional env: MAX_NEW_MATCHES (default 90) caps match downloads per player per
-// run so a first run stays inside development-key rate limits; later runs keep
-// backfilling until MAX_HISTORY (default 300) matches are stored.
+// Optional env: MAX_DOWNLOADS (default 150) caps match downloads per player per
+// run to keep runs a few minutes long (requests are paced for dev-key limits);
+// later runs keep backfilling until MAX_HISTORY (default 300) matches are stored.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { inferLpChange, slimMatch, soloRankFrom, SOLO_QUEUE_ID } from './transform.mjs';
+import {
+  inferLpChange,
+  MATCH_SCHEMA_VERSION,
+  slimMatch,
+  soloRankFrom,
+  SOLO_QUEUE_ID,
+} from './transform.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PLAYERS_FILE = join(ROOT, 'public', 'players.json');
 const DATA_DIR = join(ROOT, 'public', 'data');
 
 const API_KEY = process.env.RIOT_API_KEY;
-const MAX_NEW_MATCHES = Number(process.env.MAX_NEW_MATCHES ?? 90);
+const MAX_DOWNLOADS = Number(process.env.MAX_DOWNLOADS ?? 150);
 const MAX_HISTORY = Number(process.env.MAX_HISTORY ?? 300);
 // Development keys allow 100 requests / 2 minutes; 1.3s spacing stays under it.
 const MIN_REQUEST_GAP_MS = 1300;
@@ -100,8 +106,12 @@ async function updatePlayer(player) {
   const known = existing?.profile?.puuid === puuid ? existing.matches : [];
   const knownIds = new Set(known.map((m) => m.matchId));
   const missing = (await listSoloMatchIds(region, puuid)).filter((mid) => !knownIds.has(mid));
-  const toFetch = missing.slice(0, MAX_NEW_MATCHES);
-  console.log(`  ${missing.length} new match(es), fetching ${toFetch.length}`);
+  // Matches saved under an older shape are re-downloaded, newest first, after new ones.
+  const outdated = known.filter((m) => (m.v ?? 1) < MATCH_SCHEMA_VERSION).map((m) => m.matchId);
+  const toFetch = [...missing, ...outdated].slice(0, MAX_DOWNLOADS);
+  console.log(
+    `  ${missing.length} new, ${outdated.length} outdated match(es); downloading ${toFetch.length}`,
+  );
 
   const fresh = [];
   for (const matchId of toFetch) {
@@ -109,19 +119,31 @@ async function updatePlayer(player) {
     if (slim) fresh.push(slim);
   }
 
+  // LP changes are inferred at fetch time and can't be rebuilt, so upgrades keep them.
+  const previous = new Map(known.map((m) => [m.matchId, m]));
+  const upgraded = new Set();
+  for (const m of fresh) {
+    const old = previous.get(m.matchId);
+    if (old) {
+      m.lpChange = old.lpChange;
+      upgraded.add(m.matchId);
+    }
+  }
+  const newMatches = fresh.filter((m) => !upgraded.has(m.matchId));
+
   const now = Date.now();
   const history = existing?.profile?.puuid === puuid ? (existing.rankHistory ?? []) : [];
   const prevSnapshot = history.at(-1) ?? null;
   const snapshot = soloRank && { t: now, ...soloRank };
   if (snapshot) {
-    inferLpChange(prevSnapshot, snapshot, fresh);
+    inferLpChange(prevSnapshot, snapshot, newMatches);
     const changed =
       !prevSnapshot ||
       ['tier', 'rank', 'lp', 'wins', 'losses'].some((k) => prevSnapshot[k] !== snapshot[k]);
     if (changed) history.push(snapshot);
   }
 
-  const matches = [...fresh, ...known]
+  const matches = [...fresh, ...known.filter((m) => !upgraded.has(m.matchId))]
     .sort((a, b) => b.gameStart - a.gameStart)
     .slice(0, MAX_HISTORY);
 
