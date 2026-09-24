@@ -8,7 +8,7 @@ Angular and hosted on GitHub Pages.
 GitHub Pages only serves static files, and Riot's API key must never ship to the
 browser. So the data is fetched ahead of time:
 
-1. `.github/workflows/update-and-deploy.yml` runs every ~30 minutes (and on every
+1. `.github/workflows/update-and-deploy.yml` runs every ~15 minutes (and on every
    push to `main`).
 2. It runs `scripts/fetch-matches.mjs` with the `RIOT_API_KEY` repository secret.
    The script pulls rank + queue-420 (ranked solo) matches for everyone in

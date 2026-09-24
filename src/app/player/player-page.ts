@@ -4,6 +4,7 @@ import { map, of, startWith, switchMap } from 'rxjs';
 import { PlayerConfig } from '../core/models';
 import { TrackerDataService } from '../core/tracker-data.service';
 import { SectionTitle } from '../ui/section-title';
+import { LpChart } from './lp-chart';
 import { MatchCard } from './match-card';
 import { ProfileCard } from './profile-card';
 import { RecentSummary } from './recent-summary';
@@ -14,7 +15,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-player-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard],
+  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, LpChart],
   template: `
     @switch (state().status) {
       @case ('loading') {
@@ -32,6 +33,13 @@ const PAGE_SIZE = 20;
       }
       @case ('ready') {
         @let d = state().data!;
+        <section class="lp-section">
+          <app-section-title text="LP tracker" wave="zigzag" tileColor="var(--c-green)" />
+          <div class="card chart-card">
+            <app-lp-chart [history]="d.rankHistory" />
+          </div>
+        </section>
+
         <aside class="stats">
           <section class="card">
             <app-profile-card [data]="d" />
@@ -90,8 +98,13 @@ const PAGE_SIZE = 20;
     .history {
       min-width: 0;
     }
-    .notice {
+    .notice,
+    .lp-section {
       grid-column: 1 / -1;
+      min-width: 0;
+    }
+    .chart-card {
+      padding: 8px 12px 4px;
     }
     .card {
       background: var(--cream);
