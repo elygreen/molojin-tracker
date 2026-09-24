@@ -19,5 +19,5 @@ for (const id of ids) {
   if (!m) continue;
   const out = { id: m.matchId, win: m.win, dur: m.durationSec, remake: m.remake, me: acct.puuid.slice(0, 8), teams: m.teams,
     ps: m.participants.map(({ gameName, tagLine, puuid, ...p }) => ({ ...p, me: puuid === acct.puuid })) };
-  console.log('SAMPLE ' + JSON.stringify(out));
+  console.log(JSON.stringify(out));
 }
