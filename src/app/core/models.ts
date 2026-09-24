@@ -29,6 +29,37 @@ export interface MatchParticipant {
   kills: number;
   deaths: number;
   assists: number;
+  // The rest arrived with schema v2; older stored matches don't have them.
+  position?: string;
+  level?: number;
+  gold?: number;
+  cs?: number;
+  damage?: number;
+  /** Damage taken plus damage mitigated. */
+  taken?: number;
+  objDamage?: number;
+  vision?: number;
+  /** Healing and shielding on teammates. */
+  support?: number;
+  /** Seconds of crowd control applied. */
+  cc?: number;
+  /** 1 if ahead of the lane opponent in gold+XP at the end of laning, 0 if not. */
+  laneLead?: number | null;
+  csLead?: number | null;
+  levelLead?: number | null;
+}
+
+export interface MatchTeam {
+  teamId: number;
+  win: boolean;
+  kills: number;
+  gold: number;
+  towers: number;
+  inhibitors: number;
+  dragons: number;
+  barons: number;
+  heralds: number;
+  grubs: number;
 }
 
 export interface Match {
@@ -59,7 +90,10 @@ export interface Match {
   secondaryStyle: number | null;
   teamId: number;
   participants: MatchParticipant[];
+  teams?: MatchTeam[];
   lpChange: number | null;
+  /** Stored shape version; see scripts/transform.mjs. */
+  v?: number;
 }
 
 /** Shape of public/data/<id>.json, written by scripts/fetch-matches.mjs. */
