@@ -36,7 +36,7 @@ const SHORT_ROLE: Record<string, string> = { TOP: 'Top', JUNGLE: 'Jg', MIDDLE: '
           </thead>
           <tbody>
             @for (l of lanes(); track l.role) {
-              <tr [class.decider]="l.role === v.role">
+              <tr [class.decider]="v.roles.includes(l.role)">
                 <td class="role">{{ short(l.role) }}</td>
                 <td [class.me]="l.ours === v.me" [class.ahead]="l.oursAhead">
                   {{ l.ours.participant.champion }} <b>{{ l.ours.rating.toFixed(1) }}</b>
