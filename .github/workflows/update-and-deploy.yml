@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '*/30 * * * *'
+    # Frequent runs mean most rank snapshots cover a single game (one LP-graph point each).
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:

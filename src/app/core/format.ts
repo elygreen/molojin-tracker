@@ -60,3 +60,37 @@ export function timeAgo(ts: number, now = Date.now()): string {
 export function countedMatches(matches: Match[]): Match[] {
   return matches.filter((m) => !m.remake);
 }
+
+export const TIERS = [
+  'IRON',
+  'BRONZE',
+  'SILVER',
+  'GOLD',
+  'PLATINUM',
+  'EMERALD',
+  'DIAMOND',
+  'MASTER',
+  'GRANDMASTER',
+  'CHALLENGER',
+];
+const DIVISIONS = ['IV', 'III', 'II', 'I'];
+/** Where Master starts on the continuous scale; everything above is Master+ LP. */
+export const APEX_FLOOR = TIERS.indexOf('MASTER') * 400;
+
+/** Same scale as scripts/transform.mjs: 100 LP per division, 400 per tier. */
+export function absoluteLp(tier: string, rank: string, lp: number): number {
+  const t = TIERS.indexOf(tier);
+  if (t >= TIERS.indexOf('MASTER')) return APEX_FLOOR + lp;
+  return t * 400 + DIVISIONS.indexOf(rank) * 100 + lp;
+}
+
+/** Label for the 100-LP band starting at `floor`, e.g. "D2", "Master" or "+200". */
+export function bandLabel(floor: number): string {
+  if (floor >= APEX_FLOOR) {
+    const over = floor - APEX_FLOOR;
+    return over === 0 ? 'Master' : `+${over}`;
+  }
+  const tier = TIERS[Math.floor(floor / 400)];
+  const division = 4 - Math.floor((floor % 400) / 100);
+  return `${tier.charAt(0)}${division}`;
+}
