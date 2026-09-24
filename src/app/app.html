@@ -1,17 +1,13 @@
 <div class="frame">
   <div class="sheet">
     <header class="masthead">
-      <p class="kicker">Ranked Solo/Duo · NA</p>
-      <h1>The Ranked Grind</h1>
+      <h1>
+        @if (current(); as p) {
+          <span class="name-chip">{{ p.gameName }}</span>'s
+        }
+        Ranked Grind
+      </h1>
     </header>
-
-    <nav class="tabs" aria-label="Players">
-      @for (p of players(); track p.id) {
-        <a [routerLink]="['/', p.id]" routerLinkActive="active" ariaCurrentWhenActive="page">
-          {{ p.gameName }}<span>#{{ p.tagLine }}</span>
-        </a>
-      }
-    </nav>
 
     <main>
       <router-outlet />
