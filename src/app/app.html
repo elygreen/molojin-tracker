@@ -1,0 +1,25 @@
+<div class="frame">
+  <div class="sheet">
+    <header class="masthead">
+      <p class="kicker">Ranked Solo/Duo · NA</p>
+      <h1>The Ranked Grind</h1>
+    </header>
+
+    <nav class="tabs" aria-label="Players">
+      @for (p of players(); track p.id) {
+        <a [routerLink]="['/', p.id]" routerLinkActive="active" ariaCurrentWhenActive="page">
+          {{ p.gameName }}<span>#{{ p.tagLine }}</span>
+        </a>
+      }
+    </nav>
+
+    <main>
+      <router-outlet />
+    </main>
+
+    <footer>
+      Solo queue games only · refreshed every ~30 min ·
+      data from the Riot Games API. Not endorsed by Riot Games.
+    </footer>
+  </div>
+</div>

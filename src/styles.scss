@@ -1,0 +1,61 @@
+// Palette pulled from the reference poster: navy frame, periwinkle sheet,
+// butter-yellow title bars, cream cards, and a few flat accent colors.
+:root {
+  --navy: #173d63;
+  --ink: #1e2544;
+  --ink-soft: #55597a;
+  --peri: #a6c3f2;
+  --peri-deep: #6f8fe0;
+  --butter: #fce9a6;
+  --cream: #fffbef;
+  --kraft: #e2c99a;
+  --slot: #d9d3c3;
+  --rule: #c9c0a8;
+
+  --win: #93b4f5;
+  --win-ink: #2f56b8;
+  --win-tint: #eaf1ff;
+  --loss: #f19a8c;
+  --loss-ink: #c23b2b;
+  --loss-tint: #fdeee9;
+  --remake: #cfc9bb;
+  --remake-tint: #f3f0e8;
+
+  --c-red: #e2553f;
+  --c-orange: #f2a03d;
+  --c-green: #6cbf6a;
+  --c-purple: #8f6ad6;
+
+  --line: 3px;
+  --font-display: 'Titan One', 'Arial Rounded MT Bold', system-ui, sans-serif;
+  --font-body: 'Lexend', system-ui, sans-serif;
+
+  // Soft paper grain laid over the flat colors for the cardboard feel.
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .18 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--kraft);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--grain), var(--kraft);
+  -webkit-font-smoothing: antialiased;
+}
+
+code {
+  font-size: 0.9em;
+  background: var(--butter);
+  padding: 0 4px;
+  border-radius: 4px;
+}
