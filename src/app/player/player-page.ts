@@ -37,6 +37,10 @@ const PAGE_SIZE = 20;
       }
       @case ('ready') {
         @let d = data()!;
+        <section class="card profile" aria-label="Profile and rank">
+          <app-profile-card [data]="d" />
+        </section>
+
         <section class="lp-section" aria-label="LP over time">
           <div class="card chart-card">
             <app-lp-chart [history]="d.rankHistory" />
@@ -44,10 +48,6 @@ const PAGE_SIZE = 20;
         </section>
 
         <aside class="stats">
-          <section class="card">
-            <app-profile-card [data]="d" />
-          </section>
-
           <section aria-label="Recent form">
             <app-recent-summary [matches]="d.matches" />
           </section>
@@ -119,13 +119,28 @@ const PAGE_SIZE = 20;
       min-width: 0;
       margin: 0;
     }
-    .notice,
-    .lp-section {
+    .notice {
       grid-column: 1 / -1;
+    }
+    /* Top row: profile beside the LP graph, both the same height. */
+    .profile,
+    .lp-section {
+      align-self: stretch;
       min-width: 0;
     }
+    .profile {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     .chart-card {
+      height: 100%;
+      display: flex;
+      align-items: center;
       padding: 8px 12px 4px;
+    }
+    .chart-card app-lp-chart {
+      flex: 1;
     }
     .card {
       background: var(--cream);
