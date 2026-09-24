@@ -1,0 +1,17 @@
+# Cloudflare Worker for the site's Update button. See worker/README.md.
+name = "ranked-grind-update"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+# Where the site lives; players.json is read from here.
+SITE_URL = "https://elygreen.github.io/molojin-tracker/"
+# Browser origins allowed to call the Worker (comma-separated). localhost is always allowed.
+ALLOWED_ORIGINS = "https://elygreen.github.io"
+# Used only when the optional GITHUB_TOKEN secret is set.
+GITHUB_REPO = "elygreen/molojin-tracker"
+GITHUB_WORKFLOW = "update-and-deploy.yml"
+
+# Secrets (set with `npx wrangler secret put <NAME>`, never committed):
+#   RIOT_API_KEY  - required
+#   GITHUB_TOKEN  - optional; fine-grained token with Actions: read & write on this repo
