@@ -1,0 +1,19 @@
+# TEMPORARY: dumps recent match stats to the log for calibrating verdicts. Remove before merging.
+name: Debug sample
+on:
+  push:
+    branches: [claude/practical-mayer-oyiq3u]
+    paths: [scripts/debug-sample.mjs, .github/workflows/debug-sample.yml]
+permissions:
+  contents: read
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - env:
+          RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+        run: node scripts/debug-sample.mjs
