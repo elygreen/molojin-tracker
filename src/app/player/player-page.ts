@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, linkedSignal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { map, of, startWith, switchMap } from 'rxjs';
+import { mergeUpdate } from '../core/merge-update';
 import { PlayerConfig } from '../core/models';
 import { TrackerDataService } from '../core/tracker-data.service';
 import { SectionTitle } from '../ui/section-title';
@@ -8,6 +10,7 @@ import { LpChart } from './lp-chart';
 import { MatchCard } from './match-card';
 import { ProfileCard } from './profile-card';
 import { RecentSummary } from './recent-summary';
+import { UpdateButton, UpdateState } from './update-button';
 import { VerdictBox } from './verdict-box';
 
 const PAGE_SIZE = 20;
@@ -16,7 +19,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-player-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, LpChart, VerdictBox],
+  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, LpChart, VerdictBox, UpdateButton],
   template: `
     @switch (state().status) {
       @case ('loading') {
@@ -33,7 +36,7 @@ const PAGE_SIZE = 20;
         </div>
       }
       @case ('ready') {
-        @let d = state().data!;
+        @let d = data()!;
         <section class="lp-section">
           <app-section-title text="LP tracker" wave="zigzag" tileColor="var(--c-green)" />
           <div class="card chart-card">
@@ -53,7 +56,10 @@ const PAGE_SIZE = 20;
         </aside>
 
         <section class="history">
-          <app-section-title class="flip" text="Match history" wave="tight" tileColor="var(--c-purple)" />
+          <div class="history-head">
+            <app-section-title class="flip tall" text="Match history" wave="tight" tileColor="var(--c-purple)" />
+            <app-update-button [state]="updateState()" [enabled]="canUpdate()" (pressed)="update()" />
+          </div>
           <div class="matches">
             @for (m of visible(); track m.matchId) {
               <div class="match-row">
@@ -103,6 +109,17 @@ const PAGE_SIZE = 20;
     }
     .history {
       min-width: 0;
+    }
+    .history-head {
+      display: flex;
+      align-items: stretch;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .history-head app-section-title {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
     }
     .notice,
     .lp-section {
@@ -200,7 +217,49 @@ export class PlayerPage {
     { initialValue: { status: 'loading' as const, data: null } },
   );
 
+  /** The loaded data, replaced in place when a live update comes back. */
+  protected readonly data = linkedSignal(() => this.state().data);
+
   protected readonly pageSize = PAGE_SIZE;
   protected readonly shown = linkedSignal({ source: this.player, computation: () => PAGE_SIZE });
-  protected readonly visible = computed(() => this.state().data?.matches.slice(0, this.shown()) ?? []);
+  protected readonly visible = computed(() => this.data()?.matches.slice(0, this.shown()) ?? []);
+
+  protected readonly canUpdate = computed(() => Boolean(this.tracker.config()?.updateUrl));
+  protected readonly updateState = linkedSignal<PlayerConfig | null, UpdateState>({
+    source: this.player,
+    computation: () => ({ kind: 'idle' }),
+  });
+  private resetTimer?: ReturnType<typeof setTimeout>;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.resetTimer));
+  }
+
+  protected update(): void {
+    const player = this.player();
+    const current = this.data();
+    if (!player || !current || this.updateState().kind === 'loading') return;
+    clearTimeout(this.resetTimer);
+    this.updateState.set({ kind: 'loading' });
+    this.tracker.fetchLatest(player.id, current.matches[0]?.matchId).subscribe({
+      next: (update) => {
+        // Ignore a reply that lands after switching to another player.
+        if (this.player()?.id !== player.id) return;
+        const merged = mergeUpdate(this.data() ?? current, update);
+        this.data.set(merged.data);
+        this.settle({ kind: 'done', added: merged.added });
+      },
+      error: (err: HttpErrorResponse) => {
+        if (this.player()?.id !== player.id) return;
+        const message = (err.error as { error?: string } | null)?.error ?? (err.status ? `error ${err.status}` : 'network error');
+        this.settle({ kind: 'error', message });
+      },
+    });
+  }
+
+  /** Shows the result for a few seconds, then returns to the plain button. */
+  private settle(state: UpdateState): void {
+    this.updateState.set(state);
+    this.resetTimer = setTimeout(() => this.updateState.set({ kind: 'idle' }), state.kind === 'error' ? 6000 : 4000);
+  }
 }

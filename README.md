@@ -26,6 +26,12 @@ browser. So the data is fetched ahead of time:
 > its own, register a *Personal API Key* on the Riot developer portal and put
 > that in the secret instead.
 
+## Update button (optional)
+
+The **Update** button next to Match history pulls new games from Riot on
+demand through a small Cloudflare Worker that holds the API key. Until it's
+deployed the button stays disabled. Setup: [`worker/README.md`](worker/README.md).
+
 ## Adding a friend
 
 Add an entry to `public/players.json` and push — a new tab appears once the

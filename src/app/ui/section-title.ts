@@ -34,6 +34,18 @@ const WAVE_PATHS: Record<Wave, string> = {
     :host(.flip) {
       flex-direction: row-reverse;
     }
+    :host(.tall) .bar {
+      padding: 8px 12px;
+      font-size: 1.1rem;
+    }
+    :host(.tall) .tile {
+      flex-basis: 56px;
+    }
+    @media (max-width: 480px) {
+      :host(.tall) .tile {
+        display: none;
+      }
+    }
     .tile {
       flex: 0 0 48px;
       border: var(--line) solid var(--ink);
