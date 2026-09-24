@@ -27,30 +27,30 @@ const WAVE_PATHS: Record<Wave, string> = {
   styles: `
     :host {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       align-items: stretch;
-      margin: 0 0 14px;
+      margin: 0 0 8px;
     }
     :host(.flip) {
       flex-direction: row-reverse;
     }
     .tile {
-      flex: 0 0 76px;
+      flex: 0 0 48px;
       border: var(--line) solid var(--ink);
-      border-radius: 8px;
+      border-radius: 6px;
       display: grid;
       place-items: center;
-      padding: 4px 8px;
+      padding: 2px 6px;
     }
     svg {
       width: 100%;
-      height: 26px;
+      height: 16px;
       overflow: visible;
     }
     path {
       fill: none;
       stroke: var(--cream);
-      stroke-width: 3;
+      stroke-width: 2.5;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -59,10 +59,10 @@ const WAVE_PATHS: Record<Wave, string> = {
       margin: 0;
       background: var(--butter);
       border: var(--line) solid var(--ink);
-      border-radius: 8px;
-      padding: 6px 16px;
+      border-radius: 6px;
+      padding: 2px 12px;
       font-family: var(--font-display);
-      font-size: clamp(1.15rem, 3.4vw, 1.6rem);
+      font-size: 0.95rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--ink);
