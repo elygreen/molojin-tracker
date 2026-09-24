@@ -37,27 +37,25 @@ const PAGE_SIZE = 20;
       }
       @case ('ready') {
         @let d = data()!;
-        <section class="lp-section">
-          <app-section-title text="LP tracker" wave="zigzag" tileColor="var(--c-green)" />
+        <section class="card profile" aria-label="Profile and rank">
+          <app-profile-card [data]="d" />
+        </section>
+
+        <section class="lp-section" aria-label="LP over time">
           <div class="card chart-card">
             <app-lp-chart [history]="d.rankHistory" />
           </div>
         </section>
 
         <aside class="stats">
-          <section class="card">
-            <app-profile-card [data]="d" />
-          </section>
-
-          <section>
-            <app-section-title text="Recent form" wave="square" tileColor="var(--c-orange)" />
+          <section aria-label="Recent form">
             <app-recent-summary [matches]="d.matches" />
           </section>
         </aside>
 
         <section class="history">
           <div class="history-head">
-            <app-section-title class="flip tall" text="Match history" wave="tight" tileColor="var(--c-purple)" />
+            <app-section-title class="tall" text="Match history" [showTile]="false" />
             <app-update-button [state]="updateState()" [enabled]="canUpdate()" (pressed)="update()" />
           </div>
           <div class="matches">
@@ -121,13 +119,28 @@ const PAGE_SIZE = 20;
       min-width: 0;
       margin: 0;
     }
-    .notice,
-    .lp-section {
+    .notice {
       grid-column: 1 / -1;
+    }
+    /* Top row: profile beside the LP graph, both the same height. */
+    .profile,
+    .lp-section {
+      align-self: stretch;
       min-width: 0;
     }
+    .profile {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     .chart-card {
+      height: 100%;
+      display: flex;
+      align-items: center;
       padding: 8px 12px 4px;
+    }
+    .chart-card app-lp-chart {
+      flex: 1;
     }
     .card {
       background: var(--cream);

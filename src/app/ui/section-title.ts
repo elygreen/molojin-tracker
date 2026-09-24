@@ -17,11 +17,13 @@ const WAVE_PATHS: Record<Wave, string> = {
   selector: 'app-section-title',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="tile" [style.background]="tileColor()" aria-hidden="true">
-      <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-        <path [attr.d]="path()" />
-      </svg>
-    </div>
+    @if (showTile()) {
+      <div class="tile" [style.background]="tileColor()" aria-hidden="true">
+        <svg viewBox="0 0 100 40" preserveAspectRatio="none">
+          <path [attr.d]="path()" />
+        </svg>
+      </div>
+    }
     <h2 class="bar">{{ text() }}</h2>
   `,
   styles: `
@@ -86,6 +88,7 @@ export class SectionTitle {
   readonly text = input.required<string>();
   readonly wave = input<Wave>('sine');
   readonly tileColor = input('var(--peri-deep)');
+  readonly showTile = input(true);
 
   protected readonly path = computed(() => WAVE_PATHS[this.wave()]);
 }
