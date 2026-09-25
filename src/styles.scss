@@ -63,7 +63,12 @@ body {
   font-family: var(--font-body);
   font-size: 14px;
   color: var(--ink);
-  background: var(--grain), var(--kraft);
+  // Toasted-tan gingham, like a picnic cloth, under the paper grain.
+  background:
+    var(--grain),
+    repeating-linear-gradient(0deg, rgb(165 127 69 / 0.16) 0 22px, transparent 22px 44px),
+    repeating-linear-gradient(90deg, rgb(165 127 69 / 0.16) 0 22px, transparent 22px 44px),
+    var(--kraft);
   -webkit-font-smoothing: antialiased;
 }
 

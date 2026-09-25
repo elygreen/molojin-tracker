@@ -19,7 +19,6 @@ export class App {
   protected readonly masters = inject(MastersTracker);
   protected readonly lpPerWin = LP_PER_WIN;
 
-
   private readonly routeId = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
