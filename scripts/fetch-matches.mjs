@@ -6,7 +6,8 @@
 //
 // Optional env: MAX_DOWNLOADS (default 150) caps match downloads per player per
 // run to keep runs a few minutes long (requests are paced for dev-key limits);
-// later runs keep backfilling until MAX_HISTORY (default 300) matches are stored.
+// later runs keep backfilling until MAX_HISTORY (default 600, enough for a full
+// season so season stats stay complete) matches are stored.
 // MAX_RANK_LOOKUPS (default 90) caps the extra per-player rank lookups the same way.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -26,7 +27,7 @@ const DATA_DIR = join(ROOT, 'public', 'data');
 
 const API_KEY = process.env.RIOT_API_KEY;
 const MAX_DOWNLOADS = Number(process.env.MAX_DOWNLOADS ?? 150);
-const MAX_HISTORY = Number(process.env.MAX_HISTORY ?? 300);
+const MAX_HISTORY = Number(process.env.MAX_HISTORY ?? 600);
 const MAX_RANK_LOOKUPS = Number(process.env.MAX_RANK_LOOKUPS ?? 90);
 // Development keys allow 100 requests / 2 minutes; 1.3s spacing stays under it.
 const MIN_REQUEST_GAP_MS = 1300;
