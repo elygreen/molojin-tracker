@@ -31,6 +31,15 @@
   --c-purple: #8f6ad6;
 
   --line: 2px;
+  // Scattered see-through 90s shapes (triangles, dots, squiggles, stars) in darker periwinkle and a faint grid for the sheet behind the cards.
+  --memphis: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E %3Cg opacity='.35'%3E %3Cpath d='M262 30l32 56h-64z' fill='%236f8fe0'/%3E %3Ccircle cx='352' cy='262' r='22' fill='%236f8fe0'/%3E %3Crect x='166' y='158' width='30' height='30' rx='4' transform='rotate(22 181 173)' fill='%236f8fe0'/%3E %3Cpath d='M34 186l17-28 17 28z' fill='%236f8fe0'/%3E %3Cpath d='M56 290h10v-10h10v10h10v10h-10v10h-10v-10h-10z' fill='%236f8fe0'/%3E %3Cpath d='M318 150a22 22 0 0 1 44 0z' fill='%236f8fe0'/%3E %3Crect x='186' y='350' width='62' height='16' rx='8' fill='%236f8fe0'/%3E %3Cpath d='M28 70q14-18 28 0t28 0t28 0' fill='none' stroke='%236f8fe0' stroke-width='8' stroke-linecap='round'/%3E %3Ccircle cx='132' cy='118' r='7' fill='%236f8fe0'/%3E%3Ccircle cx='384' cy='84' r='5' fill='%236f8fe0'/%3E%3Ccircle cx='36' cy='386' r='6' fill='%236f8fe0'/%3E%3Ccircle cx='250' cy='232' r='5' fill='%236f8fe0'/%3E%3Ccircle cx='300' cy='396' r='7' fill='%236f8fe0'/%3E %3Cpath d='M378 350l8 14h-16z' fill='%236f8fe0'/%3E %3C/g%3E %3Cg fill='%236f8fe0' opacity='.35'%3E %3Cpath d='M212 72l5 12 12 5-12 5-5 12-5-12-12-5 12-5z'/%3E %3Cpath d='M112 236l4 9 9 4-9 4-4 9-4-9-9-4 9-4z'/%3E %3C/g%3E %3C/svg%3E");
+  --grid:
+    linear-gradient(rgb(255 255 255 / 0.22) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgb(255 255 255 / 0.22) 1px, transparent 1px) 0 0 / 28px 28px;
+
+  // Hard offset shadows, like the Update button: cards and smaller pieces.
+  --pop: 0 4px 0 var(--ink);
+  --pop-sm: 0 3px 0 var(--ink);
   --font-display: 'Titan One', 'Arial Rounded MT Bold', system-ui, sans-serif;
   --font-body: 'Lexend', system-ui, sans-serif;
 

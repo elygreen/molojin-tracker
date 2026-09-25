@@ -163,6 +163,7 @@ const PAGE_SIZE = 20;
     .card {
       background: var(--cream);
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop);
       border-radius: 10px;
       padding: 12px;
     }
@@ -192,6 +193,7 @@ const PAGE_SIZE = 20;
       place-items: end center;
       padding: 0 0 8px;
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop-sm);
       border-radius: 8px;
       background: var(--remake);
       color: var(--ink);

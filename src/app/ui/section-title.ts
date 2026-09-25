@@ -51,6 +51,7 @@ const WAVE_PATHS: Record<Wave, string> = {
     .tile {
       flex: 0 0 48px;
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop-sm);
       border-radius: 6px;
       display: grid;
       place-items: center;
@@ -73,6 +74,7 @@ const WAVE_PATHS: Record<Wave, string> = {
       margin: 0;
       background: var(--butter);
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop-sm);
       border-radius: 6px;
       padding: 2px 12px;
       font-family: var(--font-display);

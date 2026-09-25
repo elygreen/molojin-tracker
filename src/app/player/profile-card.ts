@@ -138,6 +138,7 @@ function seeded(i: number): number {
     .rank {
       background: var(--butter);
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop-sm);
       border-radius: 8px;
       padding: 8px 10px 10px;
     }

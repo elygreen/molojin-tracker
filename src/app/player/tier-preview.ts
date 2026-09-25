@@ -30,6 +30,7 @@ const SAMPLE_TIERS: [string, string, number][] = [
     .card {
       background: var(--cream);
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop);
       border-radius: 10px;
       padding: 12px;
     }

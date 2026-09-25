@@ -115,6 +115,7 @@ interface Team {
       container-type: inline-size;
       background: var(--cream);
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop-sm);
       border-radius: 8px;
       padding: 6px;
       font-size: 0.72rem;

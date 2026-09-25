@@ -23,7 +23,7 @@
 }
 
 .sheet {
-  background: var(--grain), var(--peri);
+  background: var(--grain), var(--memphis), var(--grid), var(--peri);
   border-radius: 14px;
   padding: 16px clamp(10px, 2vw, 20px) 14px;
 }
@@ -31,6 +31,7 @@
 .masthead {
   background: var(--grain), var(--c-green);
   border: var(--line) solid var(--ink);
+  box-shadow: var(--pop);
   border-radius: 12px;
   padding: 10px 14px 12px;
   text-align: center;

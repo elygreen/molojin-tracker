@@ -57,6 +57,7 @@ import { ChampionList } from './champion-list';
     .panel {
       background: var(--cream);
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop-sm);
       border-radius: 8px;
       padding: 8px 10px;
       min-width: 0;

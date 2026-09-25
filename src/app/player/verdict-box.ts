@@ -68,6 +68,7 @@ const SHORT_ROLE: Record<string, string> = { TOP: 'Top', JUNGLE: 'Jg', MIDDLE: '
       padding: 6px 4px;
       background: var(--cream);
       border: var(--line) solid var(--ink);
+      box-shadow: var(--pop-sm);
       border-radius: 8px;
       border-top-width: 6px;
       text-align: center;
