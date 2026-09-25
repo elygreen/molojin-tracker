@@ -30,9 +30,9 @@ export function absoluteLp({ tier, rank, lp }) {
 /**
  * Bump when the stored match shape changes; the fetch script re-downloads
  * matches saved under an older version. v2 added full per-player stats and
- * team objectives for the match verdicts.
+ * team objectives for the match verdicts; v3 added every player's build.
  */
-export const MATCH_SCHEMA_VERSION = 2;
+export const MATCH_SCHEMA_VERSION = 3;
 
 const POSITIONS = ['TOP', 'JUNGLE', 'MIDDLE', 'BOTTOM', 'UTILITY'];
 
@@ -54,10 +54,13 @@ function slimParticipant(p, index) {
     cs: (p.totalMinionsKilled ?? 0) + (p.neutralMinionsKilled ?? 0),
     damage: p.totalDamageDealtToChampions,
     taken: (p.totalDamageTaken ?? 0) + (p.damageSelfMitigated ?? 0),
+    damageTaken: p.totalDamageTaken ?? 0,
     objDamage: p.damageDealtToObjectives ?? 0,
     vision: p.visionScore ?? 0,
     support: (p.totalHealsOnTeammates ?? 0) + (p.totalDamageShieldedOnTeammates ?? 0),
     cc: p.timeCCingOthers ?? 0,
+    items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5],
+    trinket: p.item6,
     // Laning signals Riot derives from the timeline, so no extra request is needed.
     laneLead: c.laningPhaseGoldExpAdvantage ?? null,
     csLead: c.maxCsAdvantageOnLaneOpponent != null ? Math.round(c.maxCsAdvantageOnLaneOpponent) : null,

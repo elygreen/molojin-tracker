@@ -43,6 +43,13 @@ export interface MatchParticipant {
   support?: number;
   /** Seconds of crowd control applied. */
   cc?: number;
+  // Added with schema v3.
+  /** Solo rank when looked up, e.g. "DIAMOND I" or "MASTER"; null if unranked, missing if not looked up yet. */
+  soloTier?: string | null;
+  /** Raw damage taken, without mitigation (what op.gg shows). */
+  damageTaken?: number;
+  items?: number[];
+  trinket?: number;
   /** 1 if ahead of the lane opponent in gold+XP at the end of laning, 0 if not. */
   laneLead?: number | null;
   csLead?: number | null;

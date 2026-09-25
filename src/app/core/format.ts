@@ -31,6 +31,26 @@ export function rankLabel(tier: string, rank: string): string {
   return APEX_TIERS.has(tier) ? titleCase(tier) : `${titleCase(tier)} ${rank}`;
 }
 
+const TIER_SHORT: Record<string, string> = {
+  IRON: 'I',
+  BRONZE: 'B',
+  SILVER: 'S',
+  GOLD: 'G',
+  PLATINUM: 'P',
+  EMERALD: 'E',
+  DIAMOND: 'D',
+  MASTER: 'M',
+  GRANDMASTER: 'GM',
+  CHALLENGER: 'C',
+};
+const DIVISION_NUMBER: Record<string, string> = { I: '1', II: '2', III: '3', IV: '4' };
+
+/** "DIAMOND I" → "D1", "GRANDMASTER" → "GM". */
+export function shortRank(soloTier: string): string {
+  const [tier, division] = soloTier.split(' ');
+  return (TIER_SHORT[tier] ?? tier.charAt(0)) + (division ? (DIVISION_NUMBER[division] ?? '') : '');
+}
+
 export function kdaRatio(k: number, d: number, a: number): string {
   return d === 0 ? 'Perfect' : ((k + a) / d).toFixed(2);
 }

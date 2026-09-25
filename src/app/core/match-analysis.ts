@@ -100,6 +100,29 @@ export function analyzeMatch(match: Match, puuid: string): MatchVerdict | null {
   return { ...decided, forUs: match.win, lanes, me, tag };
 }
 
+export interface GameRanking extends PlayerScore {
+  /** 1 for the best score in the game, 10 for the worst. */
+  place: number;
+  /** Best player on the winning team (MVP) and on the losing team (ACE). */
+  badge: 'MVP' | 'ACE' | null;
+}
+
+/** Every player's score and 1st–10th place; null for matches stored before full stats were saved. */
+export function rankPlayers(match: Match): GameRanking[] | null {
+  const ps = match.participants;
+  if (ps.length !== 10 || !ps.every(has)) return null;
+  const scores = scorePlayers(ps, Math.max(1, match.durationSec / 60));
+  const order = [...scores].sort((a, b) => b.score - a.score);
+  const winTeam = match.win ? match.teamId : otherTeam(match.teamId);
+  const mvp = order.find((s) => s.participant.teamId === winTeam);
+  const ace = order.find((s) => s.participant.teamId !== winTeam);
+  return scores.map((s) => ({
+    ...s,
+    place: order.indexOf(s) + 1,
+    badge: match.remake ? null : s === mvp ? 'MVP' : s === ace ? 'ACE' : null,
+  }));
+}
+
 function otherTeam(teamId: number): number {
   return teamId === 100 ? 200 : 100;
 }

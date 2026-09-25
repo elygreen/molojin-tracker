@@ -7,6 +7,7 @@
 // Optional env: MAX_DOWNLOADS (default 150) caps match downloads per player per
 // run to keep runs a few minutes long (requests are paced for dev-key limits);
 // later runs keep backfilling until MAX_HISTORY (default 300) matches are stored.
+// MAX_RANK_LOOKUPS (default 90) caps the extra per-player rank lookups the same way.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
@@ -26,6 +27,7 @@ const DATA_DIR = join(ROOT, 'public', 'data');
 const API_KEY = process.env.RIOT_API_KEY;
 const MAX_DOWNLOADS = Number(process.env.MAX_DOWNLOADS ?? 150);
 const MAX_HISTORY = Number(process.env.MAX_HISTORY ?? 300);
+const MAX_RANK_LOOKUPS = Number(process.env.MAX_RANK_LOOKUPS ?? 90);
 // Development keys allow 100 requests / 2 minutes; 1.3s spacing stays under it.
 const MIN_REQUEST_GAP_MS = 1300;
 
@@ -126,6 +128,11 @@ async function updatePlayer(player) {
     const old = previous.get(m.matchId);
     if (old) {
       m.lpChange = old.lpChange;
+      // Ranks already looked up for this game carry over too.
+      for (const p of m.participants) {
+        const before = old.participants.find((o) => o.puuid === p.puuid);
+        if (before?.soloTier !== undefined) p.soloTier = before.soloTier;
+      }
       upgraded.add(m.matchId);
     }
   }
@@ -147,6 +154,8 @@ async function updatePlayer(player) {
     .sort((a, b) => b.gameStart - a.gameStart)
     .slice(0, MAX_HISTORY);
 
+  await fillParticipantRanks(matches, new Set(newMatches.map((m) => m.matchId)), platform);
+
   const data = {
     updatedAt: new Date(now).toISOString(),
     profile: {
@@ -164,6 +173,53 @@ async function updatePlayer(player) {
   await writeFile(file, JSON.stringify(data) + '\n');
   console.log(`  stored ${matches.length} match(es)`);
 }
+
+/**
+ * Tags every player in every game with their solo rank ("DIAMOND I", or null
+ * when unranked) for the expanded scoreboard. Riot only exposes current rank,
+ * so this is each player's rank when looked up. Brand-new games always get a
+ * fresh lookup; older games reuse a rank already known for that player and
+ * otherwise fill in newest first, MAX_RANK_LOOKUPS per run.
+ */
+async function fillParticipantRanks(matches, newIds, platform) {
+  const known = new Map();
+  for (const m of matches) {
+    for (const p of m.participants) {
+      if (p.soloTier !== undefined && !known.has(p.puuid)) known.set(p.puuid, p.soloTier);
+    }
+  }
+  const fresh = new Map();
+  let lookups = 0;
+  const lookup = async (puuid) => {
+    if (fresh.has(puuid)) return fresh.get(puuid);
+    if (lookups >= MAX_RANK_LOOKUPS) return undefined;
+    lookups++;
+    try {
+      const solo = soloRankFrom(
+        await riot(`https://${platform}.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}`),
+      );
+      const tier = solo ? (APEX_TIERS.has(solo.tier) ? solo.tier : `${solo.tier} ${solo.rank}`) : null;
+      fresh.set(puuid, tier);
+      return tier;
+    } catch (err) {
+      console.warn(`  rank lookup failed: ${err.message}`);
+      return undefined;
+    }
+  };
+
+  // matches is newest first.
+  for (const m of matches) {
+    const isNew = newIds.has(m.matchId);
+    for (const p of m.participants) {
+      if (p.soloTier !== undefined && !isNew) continue;
+      const tier = isNew || !known.has(p.puuid) ? await lookup(p.puuid) : known.get(p.puuid);
+      if (tier !== undefined) p.soloTier = tier;
+    }
+  }
+  console.log(`  looked up ${lookups} player rank(s)`);
+}
+
+const APEX_TIERS = new Set(['MASTER', 'GRANDMASTER', 'CHALLENGER']);
 
 const players = await readJson(PLAYERS_FILE, []);
 await mkdir(DATA_DIR, { recursive: true });

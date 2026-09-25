@@ -8,6 +8,7 @@ import { PlayerConfig } from '../core/models';
 import { TrackerDataService } from '../core/tracker-data.service';
 import { SectionTitle } from '../ui/section-title';
 import { LpChart } from './lp-chart';
+import { MatchDetails } from './match-details';
 import { MatchCard } from './match-card';
 import { ProfileCard } from './profile-card';
 import { RecentSummary } from './recent-summary';
@@ -20,7 +21,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-player-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, LpChart, VerdictBox, UpdateButton],
+  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, MatchDetails, LpChart, VerdictBox, UpdateButton],
   template: `
     @switch (state().status) {
       @case ('loading') {
@@ -61,12 +62,28 @@ const PAGE_SIZE = 20;
           </div>
           <div class="matches">
             @for (m of visible(); track m.matchId) {
+              @let open = expanded().has(m.matchId);
               <div class="match-row">
                 <div class="match-slot">
                   <app-match-card [match]="m" [puuid]="d.profile.puuid" />
                 </div>
                 <app-verdict-box [match]="m" [puuid]="d.profile.puuid" />
+                <button
+                  class="expand"
+                  type="button"
+                  [class.win]="!m.remake && m.win"
+                  [class.loss]="!m.remake && !m.win"
+                  [class.open]="open"
+                  [attr.aria-expanded]="open"
+                  [attr.aria-label]="(open ? 'Hide' : 'Show') + ' game details'"
+                  (click)="toggle(m.matchId)"
+                >
+                  <svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" /></svg>
+                </button>
               </div>
+              @if (open) {
+                <app-match-details [match]="m" [puuid]="d.profile.puuid" />
+              }
             } @empty {
               <div class="card notice">No ranked solo games found yet.</div>
             }
@@ -166,8 +183,47 @@ const PAGE_SIZE = 20;
     }
     .match-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 92px;
+      grid-template-columns: minmax(0, 1fr) 92px 26px;
       gap: 6px;
+    }
+    /* Dropdown handle at the end of each row, tinted like its match. */
+    .expand {
+      display: grid;
+      place-items: end center;
+      padding: 0 0 8px;
+      border: var(--line) solid var(--ink);
+      border-radius: 8px;
+      background: var(--remake);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .expand.win {
+      background: var(--win);
+    }
+    .expand.loss {
+      background: var(--loss);
+    }
+    .expand:hover {
+      filter: brightness(1.06);
+    }
+    .expand:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 1px;
+    }
+    .expand svg {
+      width: 12px;
+      height: 8px;
+      transition: transform 0.15s;
+    }
+    .expand.open svg {
+      transform: rotate(180deg);
+    }
+    .expand path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
     /* Match rows size themselves against this slot, not the whole list. */
     .match-slot {
@@ -177,7 +233,7 @@ const PAGE_SIZE = 20;
     }
     @container (max-width: 480px) {
       .match-row {
-        grid-template-columns: minmax(0, 1fr) 76px;
+        grid-template-columns: minmax(0, 1fr) 76px 22px;
       }
     }
     .more {
@@ -237,6 +293,8 @@ export class PlayerPage {
 
   protected readonly pageSize = PAGE_SIZE;
   protected readonly shown = linkedSignal({ source: this.player, computation: () => PAGE_SIZE });
+  /** Match ids whose details are open. */
+  protected readonly expanded = linkedSignal({ source: this.player, computation: () => new Set<string>() });
   protected readonly visible = computed(() => this.data()?.matches.slice(0, this.shown()) ?? []);
 
   protected readonly canUpdate = computed(() => Boolean(this.tracker.config()?.updateUrl));
@@ -274,6 +332,12 @@ export class PlayerPage {
         this.settle({ kind: 'error', message });
       },
     });
+  }
+
+  protected toggle(matchId: string): void {
+    const next = new Set(this.expanded());
+    if (!next.delete(matchId)) next.add(matchId);
+    this.expanded.set(next);
   }
 
   /** Shows the result for a few seconds, then returns to the plain button. */
