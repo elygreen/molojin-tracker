@@ -35,6 +35,13 @@ export function kdaRatio(k: number, d: number, a: number): string {
   return d === 0 ? 'Perfect' : ((k + a) / d).toFixed(2);
 }
 
+/** Color band for a KDA ratio from kdaRatio(): under 3 plain, 3–4.99 good, 5+ (or Perfect) great. */
+export function kdaTier(ratio: string): 'great' | 'good' | null {
+  if (ratio === 'Perfect') return 'great';
+  const r = Number(ratio);
+  return r >= 5 ? 'great' : r >= 3 ? 'good' : null;
+}
+
 export function winRate(wins: number, games: number): number {
   return games === 0 ? 0 : Math.round((wins / games) * 100);
 }

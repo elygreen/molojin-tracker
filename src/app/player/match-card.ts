@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DdragonService } from '../core/ddragon.service';
-import { duration, kdaRatio, timeAgo } from '../core/format';
+import { duration, kdaRatio, kdaTier, timeAgo } from '../core/format';
 import { Match } from '../core/models';
 import { GameIcon } from '../ui/game-icon';
 
@@ -53,7 +53,7 @@ import { GameIcon } from '../ui/game-icon';
         <div class="kda-nums">
           {{ match().kills }} / <span class="deaths">{{ match().deaths }}</span> / {{ match().assists }}
         </div>
-        <div class="kda-ratio">{{ ratio() }}{{ ratio() === 'Perfect' ? '' : ':1' }} KDA</div>
+        <div class="kda-ratio" [class]="kdaTier(ratio())">{{ ratio() }}{{ ratio() === 'Perfect' ? '' : ':1' }} KDA</div>
         @if (match().multikill) {
           <span class="multikill">{{ match().multikill }}</span>
         }
@@ -105,6 +105,7 @@ export class MatchCard {
     const m = this.match();
     return kdaRatio(m.kills, m.deaths, m.assists);
   });
+  protected readonly kdaTier = kdaTier;
   protected readonly kp = computed(() => Math.round(this.match().killParticipation * 100));
   protected readonly csPerMin = computed(() =>
     (this.match().cs / Math.max(1, this.match().durationSec / 60)).toFixed(1),

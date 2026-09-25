@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DdragonService } from '../core/ddragon.service';
-import { POSITIONS, countedMatches, kdaRatio, winRate } from '../core/format';
+import { POSITIONS, countedMatches, kdaRatio, kdaTier, winRate } from '../core/format';
 import { Match } from '../core/models';
 import { Donut } from '../ui/donut';
 import { GameIcon } from '../ui/game-icon';
@@ -21,15 +21,15 @@ interface ChampLine {
   imports: [Donut, GameIcon],
   template: `
     <section class="panel record">
-      <h3>Last {{ games().length }} games</h3>
-      <div class="record-body">
-        <app-donut [percent]="wr()" label="Win rate" />
+      <app-donut [percent]="wr()" label="Win rate" />
+      <div>
+        <h3>Last {{ games().length }} games</h3>
         <div>
           <p class="wl">{{ wins() }}W {{ games().length - wins() }}L</p>
           <p class="kda-line">
             {{ avg().k }} / <span class="d">{{ avg().d }}</span> / {{ avg().a }}
           </p>
-          <p class="kda">{{ avg().ratio }}{{ avg().ratio === 'Perfect' ? '' : ':1' }} KDA</p>
+          <p class="kda" [class]="tier(avg().ratio)">{{ avg().ratio }}{{ avg().ratio === 'Perfect' ? '' : ':1' }} KDA</p>
           <p class="kp">P/Kill {{ avg().kp }}%</p>
         </div>
       </div>
@@ -45,7 +45,9 @@ interface ChampLine {
             {{ pct(c.wins, c.games) }}%
             <small>({{ c.wins }}W {{ c.games - c.wins }}L)</small>
           </div>
-          <div class="champ-kda">{{ ratio(c) }} KDA</div>
+          <div class="champ-kda">
+            <span [class]="tier(ratio(c))">{{ ratio(c) }}</span> KDA
+          </div>
         </div>
       } @empty {
         <p class="empty">No games yet.</p>
@@ -96,10 +98,23 @@ interface ChampLine {
     p {
       margin: 0;
     }
-    .record-body {
-      display: flex;
+    /* Win-rate donut fills the left column; title and numbers sit on the right. */
+    .record {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
       align-items: center;
       gap: 12px;
+      --donut-size: 84px;
+    }
+    .good {
+      color: var(--kda-good);
+    }
+    .great {
+      color: var(--kda-great);
+    }
+    .champ-kda .good,
+    .champ-kda .great {
+      font-weight: 700;
     }
     .wl {
       font-size: 0.72rem;
@@ -247,6 +262,7 @@ export class RecentSummary {
   });
 
   protected pct = winRate;
+  protected tier = kdaTier;
   protected ratio(c: ChampLine): string {
     return kdaRatio(c.kills, c.deaths, c.assists);
   }
