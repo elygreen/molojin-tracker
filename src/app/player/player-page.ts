@@ -151,6 +151,9 @@ const PAGE_SIZE = 20;
       flex-direction: column;
       justify-content: center;
     }
+    .card.profile {
+      padding-block: 10px;
+    }
     .chart-card {
       height: 100%;
       display: flex;

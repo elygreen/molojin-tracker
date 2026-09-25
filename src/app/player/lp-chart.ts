@@ -11,7 +11,7 @@ import {
 import { APEX_FLOOR, TIERS, TIER_COLORS, absoluteLp, bandLabel, rankLabel } from '../core/format';
 import { RankSnapshot } from '../core/models';
 
-const HEIGHT = 200;
+const HEIGHT = 176;
 const PAD = { top: 12, right: 14, bottom: 24, left: 50 };
 
 interface Point {
