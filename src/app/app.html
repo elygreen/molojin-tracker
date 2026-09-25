@@ -1,11 +1,14 @@
 <div class="frame">
   <div class="sheet">
-    <header class="masthead" [class.hit]="masters.reached()">
+    <header class="masthead" [class.hit]="masters.reached()" [attr.data-variant]="variant">
       <h1>
         @if (current(); as p) {
-          <span class="name-chip">{{ p.gameName }}</span>'s
+          <span class="name-chip">{{ p.gameName }}</span>
         }
-        Ranked Grind
+        <span class="title-rest">{{ current() ? "'s " : '' }}Ranked Grind</span>
+        @if (variant === '2' && rankText()) {
+          <span class="sticker" aria-hidden="true"><span>{{ rankText() }}</span></span>
+        }
       </h1>
       @if (masters.reached()) {
         <div class="goal hit" role="status">{{ current()?.gameName ?? 'Player' }} hit masters!</div>
@@ -14,6 +17,17 @@
           <span class="goal-label">Wins to Masters</span>
           <span class="goal-count">{{ masters.winsLeft() }}</span>
           <span class="goal-sub">{{ masters.lpLeft() }} LP to go</span>
+        </div>
+      }
+      @if (variant === '3' && ticker().length) {
+        <div class="ticker" aria-hidden="true">
+          <div class="ticker-track">
+            @for (copy of [0, 1]; track copy) {
+              @for (item of ticker(); track $index) {
+                <span class="ticker-item">★ {{ item }}</span>
+              }
+            }
+          </div>
         </div>
       }
     </header>
