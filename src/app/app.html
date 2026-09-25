@@ -1,12 +1,21 @@
 <div class="frame">
   <div class="sheet">
-    <header class="masthead">
+    <header class="masthead" [class.hit]="masters.reached()">
       <h1>
         @if (current(); as p) {
           <span class="name-chip">{{ p.gameName }}</span>'s
         }
         Ranked Grind
       </h1>
+      @if (masters.reached()) {
+        <div class="goal hit" role="status">{{ current()?.gameName ?? 'Player' }} hit masters!</div>
+      } @else if (masters.winsLeft() !== null) {
+        <div class="goal" [title]="masters.lpLeft() + ' LP to go at about +' + lpPerWin + ' a win'">
+          <span class="goal-label">Wins to Masters</span>
+          <span class="goal-count">{{ masters.winsLeft() }}</span>
+          <span class="goal-sub">{{ masters.lpLeft() }} LP to go</span>
+        </div>
+      }
     </header>
 
     <main>
@@ -19,3 +28,7 @@
     </footer>
   </div>
 </div>
+
+@if (masters.reached()) {
+  <app-confetti />
+}

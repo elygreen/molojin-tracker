@@ -35,6 +35,79 @@
   padding: 10px 14px 12px;
   text-align: center;
   margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.masthead h1 {
+  flex: 1;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .masthead {
+    flex-direction: column;
+  }
+}
+
+// Countdown to Masters on the right of the title.
+.goal {
+  flex: none;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 10px;
+  background: var(--cream);
+  border: var(--line) solid var(--ink);
+  border-radius: 10px;
+  padding: 6px 12px;
+  box-shadow: 0 3px 0 var(--ink);
+  text-align: left;
+}
+.goal-label {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.goal-count {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--win-ink);
+}
+.goal-sub {
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+}
+.goal.hit {
+  display: block;
+  background: var(--butter);
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.6vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  box-shadow: 0 4px 0 var(--ink);
+  animation: shake 0.9s ease-in-out infinite alternate;
+}
+// A smooth side-to-side sway with a gentle hop and pulse.
+@keyframes shake {
+  0% {
+    transform: rotate(-4deg) scale(1);
+  }
+  50% {
+    transform: rotate(0) scale(1.07) translateY(-4px);
+  }
+  100% {
+    transform: rotate(4deg) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .goal.hit {
+    animation: none;
+  }
 }
 h1 {
   margin: 0;

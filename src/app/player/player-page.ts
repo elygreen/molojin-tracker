@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, input, linkedSignal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { map, of, startWith, switchMap } from 'rxjs';
+import { MastersTracker } from '../core/masters';
 import { mergeUpdate } from '../core/merge-update';
 import { PlayerConfig } from '../core/models';
 import { TrackerDataService } from '../core/tracker-data.service';
@@ -210,6 +211,7 @@ export class PlayerPage {
   /** Bound from the route; empty on the root route, which shows the first player. */
   readonly id = input<string>('');
   private readonly tracker = inject(TrackerDataService);
+  private readonly masters = inject(MastersTracker);
 
   protected readonly player = computed<PlayerConfig | null>(() => {
     const players = this.tracker.players() ?? [];
@@ -245,7 +247,11 @@ export class PlayerPage {
   private resetTimer?: ReturnType<typeof setTimeout>;
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => clearTimeout(this.resetTimer));
+    effect(() => this.masters.rank.set(this.data()?.soloRank ?? null));
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.resetTimer);
+      this.masters.rank.set(null);
+    });
   }
 
   protected update(): void {
