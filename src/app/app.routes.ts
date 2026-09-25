@@ -4,6 +4,7 @@ import { filter, map, take } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { TrackerDataService } from './core/tracker-data.service';
 import { PlayerPage } from './player/player-page';
+import { TierPreview } from './player/tier-preview';
 
 /** Sends the bare URL to the first player listed in players.json. */
 const firstPlayer = () => {
@@ -17,5 +18,6 @@ const firstPlayer = () => {
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', canActivate: [firstPlayer], component: PlayerPage },
+  { path: 'tier-preview', component: TierPreview },
   { path: ':id', component: PlayerPage },
 ];
