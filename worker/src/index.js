@@ -80,14 +80,21 @@ async function loadPlayers(env) {
 }
 
 async function riot(url, env) {
-  const res = await fetch(url, { headers: { 'X-Riot-Token': env.RIOT_API_KEY } });
+  // Never cache Riot's answers: the key isn't part of the cache key, and puuids
+  // are encrypted per key, so a cached lookup from an old key breaks a new one.
+  const res = await fetch(url, { headers: { 'X-Riot-Token': env.RIOT_API_KEY }, cache: 'no-store' });
   if (res.ok) return res.json();
+  const endpoint = new URL(url).pathname.split('/').slice(1, 4).join('/');
+  const detail = await res
+    .json()
+    .then((b) => b?.status?.message ?? '')
+    .catch(() => '');
   const err = new Error(
     res.status === 401 || res.status === 403
       ? 'Riot rejected the API key; it may have expired.'
       : res.status === 429
         ? 'Riot rate limit reached; try again in a minute.'
-        : `Riot API error ${res.status}`,
+        : `Riot API error ${res.status} on ${endpoint}${detail ? `: ${detail}` : ''}`,
   );
   err.status = res.status;
   throw err;

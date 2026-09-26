@@ -86,6 +86,37 @@ async function listSoloMatchIds(region, puuid) {
   return ids;
 }
 
+/**
+ * Riot encrypts puuids per API key, so switching keys (say, from a development
+ * key to a personal one) shows the same account under a new puuid. Match on
+ * the Riot ID too, so a key change doesn't read as a different player and
+ * wipe the stored history.
+ */
+function isSameAccount(existing, account) {
+  const profile = existing?.profile;
+  if (!profile) return false;
+  if (profile.puuid === account.puuid) return true;
+  const same = (a, b) => (a ?? '').toLowerCase() === (b ?? '').toLowerCase();
+  return same(profile.gameName, account.gameName) && same(profile.tagLine, account.tagLine);
+}
+
+/**
+ * Stored matches, moved onto a new puuid after a key change. The tracked
+ * player's own puuid is swapped straight away so their games still find them;
+ * everyone else's can only be fixed by re-downloading, so the games are marked
+ * outdated (v: 0) and upgraded over the next few runs.
+ */
+function rekey(existing, puuid) {
+  const oldPuuid = existing.profile.puuid;
+  if (oldPuuid === puuid) return existing.matches;
+  console.log('  API key changed (new puuid for the same Riot ID); keeping history and re-downloading');
+  return existing.matches.map((m) => ({
+    ...m,
+    v: 0,
+    participants: m.participants.map((p) => (p.puuid === oldPuuid ? { ...p, puuid } : p)),
+  }));
+}
+
 async function updatePlayer(player) {
   const { id, gameName, tagLine, platform, region } = player;
   const file = join(DATA_DIR, `${id}.json`);
@@ -105,8 +136,8 @@ async function updatePlayer(player) {
   );
   const soloRank = soloRankFrom(entries);
 
-  // A changed puuid means a different account; start that player's history fresh.
-  const known = existing?.profile?.puuid === puuid ? existing.matches : [];
+  const sameAccount = isSameAccount(existing, account);
+  const known = sameAccount ? rekey(existing, puuid) : [];
   const knownIds = new Set(known.map((m) => m.matchId));
   const missing = (await listSoloMatchIds(region, puuid)).filter((mid) => !knownIds.has(mid));
   // Matches saved under an older shape are re-downloaded, newest first, after new ones.
@@ -129,18 +160,21 @@ async function updatePlayer(player) {
     const old = previous.get(m.matchId);
     if (old) {
       m.lpChange = old.lpChange;
-      // Ranks already looked up for this game carry over too.
-      for (const p of m.participants) {
-        const before = old.participants.find((o) => o.puuid === p.puuid);
+      // Ranks already looked up for this game carry over too. After a key change
+      // the puuids differ, so fall back to the same seat (Riot keeps the order).
+      m.participants.forEach((p, i) => {
+        const seat = old.participants[i];
+        const before =
+          old.participants.find((o) => o.puuid === p.puuid) ?? (seat?.champion === p.champion ? seat : undefined);
         if (before?.soloTier !== undefined) p.soloTier = before.soloTier;
-      }
+      });
       upgraded.add(m.matchId);
     }
   }
   const newMatches = fresh.filter((m) => !upgraded.has(m.matchId));
 
   const now = Date.now();
-  const history = existing?.profile?.puuid === puuid ? (existing.rankHistory ?? []) : [];
+  const history = sameAccount ? (existing.rankHistory ?? []) : [];
   const prevSnapshot = history.at(-1) ?? null;
   const snapshot = soloRank && { t: now, ...soloRank };
   if (snapshot) {
@@ -210,6 +244,8 @@ async function fillParticipantRanks(matches, newIds, platform) {
 
   // matches is newest first.
   for (const m of matches) {
+    // Games waiting to be re-downloaded may carry puuids from an old API key, which Riot can't decrypt.
+    if ((m.v ?? 1) < MATCH_SCHEMA_VERSION) continue;
     const isNew = newIds.has(m.matchId);
     for (const p of m.participants) {
       if (p.soloTier !== undefined && !isNew) continue;
