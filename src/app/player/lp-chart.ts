@@ -266,15 +266,20 @@ export class LpChart {
       .map((s) => ({ snap: s, abs: absoluteLp(s.tier, s.rank, s.lp), total: s.wins + s.losses })),
   );
 
-  /** LP range padded out to whole divisions, at least three divisions tall. */
+  /**
+   * LP range padded out to whole divisions, at least two divisions tall.
+   * Below Master the top edge is Master itself (the goal), and any extra height
+   * goes underneath, so the line uses the whole chart.
+   */
   private readonly domain = computed(() => {
     const abs = this.raw().map((r) => r.abs);
     if (!abs.length) return { lo: 0, hi: 300 };
+    const belowMaster = Math.max(...abs) < APEX_FLOOR;
     let lo = Math.floor((Math.min(...abs) - 25) / 100) * 100;
-    let hi = Math.ceil((Math.max(...abs) + 25) / 100) * 100;
-    while (hi - lo < 300) {
-      hi += 100;
-      if (hi - lo < 300) lo -= 100;
+    let hi = belowMaster ? APEX_FLOOR : Math.ceil((Math.max(...abs) + 25) / 100) * 100;
+    while (hi - lo < 200) {
+      if (!belowMaster) hi += 100;
+      if (hi - lo < 200) lo -= 100;
     }
     return { lo: Math.max(0, lo), hi };
   });
