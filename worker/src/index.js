@@ -45,6 +45,9 @@ export default {
     const cached = await cache.match(cacheKey);
     if (cached) return withHeaders(cached, { ...cors, 'X-Update-Cache': 'hit' });
 
+    const keyProblem = checkKey(env.RIOT_API_KEY);
+    if (keyProblem) return json({ error: keyProblem }, 500, cors);
+
     let body;
     try {
       body = await fetchLatest(player, env);
@@ -74,6 +77,26 @@ function corsHeaders(origin, env) {
     : { Vary: 'Origin' };
 }
 
+/**
+ * Catches a mangled RIOT_API_KEY secret (stray quotes, spaces, a pasted
+ * "NAME=value") before Riot answers with an unhelpful 400. Describes the
+ * problem without ever echoing the key.
+ */
+function checkKey(key) {
+  if (!key) return 'RIOT_API_KEY secret is not set on the Worker.';
+  if (/^RGAPI-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(key)) return null;
+  const hints = [];
+  if (key !== key.trim()) hints.push('it has spaces or line breaks at the start or end');
+  if (/["'`]/.test(key)) hints.push('it contains quote marks');
+  if (/[^!-~]/.test(key.trim())) hints.push('it contains invisible or non-ASCII characters');
+  if (!key.trim().replace(/^["'`]+/, '').startsWith('RGAPI-')) hints.push('it does not start with "RGAPI-"');
+  return (
+    `RIOT_API_KEY on the Worker is not a plain Riot key (${key.length} characters; expected 42)` +
+    (hints.length ? `: ${hints.join('; ')}.` : '.') +
+    ' Re-enter it with `npx wrangler secret put RIOT_API_KEY`.'
+  );
+}
+
 async function loadPlayers(env) {
   const res = await fetch(new URL('players.json', env.SITE_URL), { cf: { cacheTtl: 300 } });
   return res.ok ? res.json() : [];
@@ -85,10 +108,13 @@ async function riot(url, env) {
   const res = await fetch(url, { headers: { 'X-Riot-Token': env.RIOT_API_KEY }, cache: 'no-store' });
   if (res.ok) return res.json();
   const endpoint = new URL(url).pathname.split('/').slice(1, 4).join('/');
-  const detail = await res
-    .json()
-    .then((b) => b?.status?.message ?? '')
-    .catch(() => '');
+  const text = await res.text().catch(() => '');
+  let detail = '';
+  try {
+    detail = JSON.parse(text)?.status?.message ?? '';
+  } catch {
+    detail = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+  }
   const err = new Error(
     res.status === 401 || res.status === 403
       ? 'Riot rejected the API key; it may have expired.'
