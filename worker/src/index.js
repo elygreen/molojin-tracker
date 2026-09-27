@@ -45,6 +45,8 @@ export default {
     const cached = await cache.match(cacheKey);
     if (cached) return withHeaders(cached, { ...cors, 'X-Update-Cache': 'hit' });
 
+    // Pasted secrets often carry an invisible trailing newline; Riot needs the bare key.
+    env = { ...env, RIOT_API_KEY: (env.RIOT_API_KEY ?? '').trim() };
     const keyProblem = checkKey(env.RIOT_API_KEY);
     if (keyProblem) return json({ error: keyProblem }, 500, cors);
 
@@ -116,11 +118,13 @@ async function riot(url, env) {
     detail = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
   }
   const err = new Error(
-    res.status === 401 || res.status === 403
-      ? 'Riot rejected the API key; it may have expired.'
-      : res.status === 429
-        ? 'Riot rate limit reached; try again in a minute.'
-        : `Riot API error ${res.status} on ${endpoint}${detail ? `: ${detail}` : ''}`,
+    res.status === 401
+      ? `Riot doesn't recognize the API key (${detail || 'unknown key'}); it may have been regenerated. Update RIOT_API_KEY.`
+      : res.status === 403
+        ? `Riot rejected the API key (403 on ${endpoint}${detail ? `: ${detail}` : ''}); it may have expired.`
+        : res.status === 429
+          ? 'Riot rate limit reached; try again in a minute.'
+          : `Riot API error ${res.status} on ${endpoint}${detail ? `: ${detail}` : ''}`,
   );
   err.status = res.status;
   throw err;
