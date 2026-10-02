@@ -51,9 +51,9 @@ interface ChampLine {
   styles: `
     :host {
       display: block;
-      background: var(--cream);
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
+      background: var(--paper-light);
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
       border-radius: 8px;
       padding: 8px 10px;
       min-width: 0;
@@ -91,7 +91,7 @@ interface ChampLine {
     }
     .champ app-game-icon {
       grid-row: span 3;
-      border: 2px solid var(--ink);
+      border: 2px solid var(--line);
     }
     .champ-name {
       font-weight: 700;
@@ -138,13 +138,13 @@ interface ChampLine {
       height: 5px;
       margin-top: 3px;
       border-radius: 99px;
-      background: var(--slot);
+      background: var(--paper-deep);
       overflow: hidden;
     }
     .play-bar span {
       display: block;
       height: 100%;
-      background: var(--peri-deep);
+      background: var(--periwinkle);
     }
     .empty {
       margin: 0;
@@ -158,7 +158,7 @@ interface ChampLine {
       font-weight: 700;
       color: var(--ink);
       background: var(--butter);
-      border: 1.5px solid var(--ink);
+      border: 1.5px solid var(--line);
       border-radius: 99px;
       padding: 1px 12px;
       cursor: pointer;

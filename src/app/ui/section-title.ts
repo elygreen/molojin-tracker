@@ -50,9 +50,9 @@ const WAVE_PATHS: Record<Wave, string> = {
     }
     .tile {
       flex: 0 0 48px;
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
-      border-radius: 6px;
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      border-radius: 8px;
       display: grid;
       place-items: center;
       padding: 2px 6px;
@@ -64,7 +64,7 @@ const WAVE_PATHS: Record<Wave, string> = {
     }
     path {
       fill: none;
-      stroke: var(--cream);
+      stroke: var(--paper-light);
       stroke-width: 2.5;
       stroke-linecap: round;
       stroke-linejoin: round;
@@ -73,13 +73,13 @@ const WAVE_PATHS: Record<Wave, string> = {
       flex: 1;
       margin: 0;
       background: var(--butter);
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
-      border-radius: 6px;
-      padding: 2px 12px;
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      border-radius: 8px;
+      padding: 4px 12px 2px;
       font-family: var(--font-display);
       font-size: 0.95rem;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
       color: var(--ink);
       text-align: center;
@@ -89,7 +89,7 @@ const WAVE_PATHS: Record<Wave, string> = {
 export class SectionTitle {
   readonly text = input.required<string>();
   readonly wave = input<Wave>('sine');
-  readonly tileColor = input('var(--peri-deep)');
+  readonly tileColor = input('var(--periwinkle)');
   readonly showTile = input(true);
 
   protected readonly path = computed(() => WAVE_PATHS[this.wave()]);

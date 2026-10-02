@@ -102,7 +102,7 @@ const PAGE_SIZE = 20;
     :host {
       display: grid;
       grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
-      gap: 14px;
+      gap: 18px;
       align-items: start;
     }
     @media (max-width: 860px) {
@@ -164,10 +164,10 @@ const PAGE_SIZE = 20;
       flex: 1;
     }
     .card {
-      background: var(--cream);
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop);
-      border-radius: 10px;
+      background: var(--paper-light);
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 14px;
       padding: 12px;
     }
     .notice h2 {
@@ -195,8 +195,8 @@ const PAGE_SIZE = 20;
       display: grid;
       place-items: end center;
       padding: 0 0 8px;
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
       border-radius: 8px;
       background: var(--remake);
       color: var(--ink);
@@ -210,10 +210,6 @@ const PAGE_SIZE = 20;
     }
     .expand:hover {
       filter: brightness(1.06);
-    }
-    .expand:focus-visible {
-      outline: 3px solid var(--ink);
-      outline-offset: 1px;
     }
     .expand svg {
       width: 12px;
@@ -251,20 +247,20 @@ const PAGE_SIZE = 20;
       letter-spacing: 0.05em;
       background: var(--butter);
       color: var(--ink);
-      border: var(--line) solid var(--ink);
-      border-radius: 99px;
-      padding: 5px 16px;
+      border: 2.5px solid var(--line);
+      border-radius: 10px;
+      padding: 6px 16px 4px;
       cursor: pointer;
-      box-shadow: 0 3px 0 var(--ink);
-      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: var(--shadow-sm);
+      transition: transform 80ms, box-shadow 80ms;
     }
     .more:hover {
-      transform: translateY(1px);
-      box-shadow: 0 2px 0 var(--ink);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--line);
     }
     .more:active {
-      transform: translateY(3px);
-      box-shadow: 0 0 0 var(--ink);
+      transform: translate(3px, 3px);
+      box-shadow: none;
     }
   `,
 })

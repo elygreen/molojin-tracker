@@ -21,7 +21,7 @@ import { ChangeDetectionStrategy, Component, input, linkedSignal } from '@angula
       width: var(--icon-size, 24px);
       height: var(--icon-size, 24px);
       border-radius: var(--icon-radius, 5px);
-      background: var(--slot);
+      background: var(--paper-deep);
       overflow: hidden;
       flex: none;
     }

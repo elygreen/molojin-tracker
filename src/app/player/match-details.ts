@@ -113,15 +113,15 @@ interface Team {
       flex-direction: column;
       gap: 6px;
       container-type: inline-size;
-      background: var(--cream);
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
+      background: var(--paper-light);
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
       border-radius: 8px;
       padding: 6px;
       font-size: 0.72rem;
     }
     .team {
-      border: 1.5px solid var(--ink);
+      border: 1.5px solid var(--line);
       border-radius: 6px;
       overflow: hidden;
       --row-tint: var(--remake-tint);
@@ -177,7 +177,7 @@ interface Team {
       --icon-radius: 50%;
     }
     .champ app-game-icon {
-      border: 1.5px solid var(--ink);
+      border: 1.5px solid var(--line);
     }
     .lvl {
       position: absolute;
@@ -205,8 +205,8 @@ interface Team {
       line-height: 1.4;
       padding: 0 4px;
       border-radius: 4px;
-      border: 1px solid var(--ink);
-      background: var(--cream);
+      border: 1px solid var(--line);
+      background: var(--paper-light);
       color: var(--ink-soft);
     }
     .tier[data-tier='DIAMOND'] {
@@ -253,18 +253,18 @@ interface Team {
     .place {
       min-width: 32px;
       text-align: center;
-      background: var(--slot);
-      border: 1.5px solid var(--ink);
+      background: var(--paper-deep);
+      border: 1.5px solid var(--line);
       border-radius: 99px;
       padding: 0 5px;
       font-size: 0.62rem;
       font-weight: 700;
     }
     .place.mvp {
-      background: var(--c-orange);
+      background: var(--mustard);
     }
     .place.ace {
-      background: var(--c-purple);
+      background: var(--purple);
       color: #fff;
     }
     .col-kda {
@@ -307,9 +307,9 @@ interface Team {
     .bar {
       width: 100%;
       height: 6px;
-      border: 1px solid var(--ink);
+      border: 1px solid var(--line);
       border-radius: 99px;
-      background: var(--cream);
+      background: var(--paper-light);
       overflow: hidden;
     }
     .fill {
@@ -317,7 +317,7 @@ interface Team {
       height: 100%;
     }
     .fill.dealt {
-      background: var(--c-red);
+      background: var(--coral);
     }
     .fill.taken {
       background: var(--ink-soft);
@@ -328,7 +328,7 @@ interface Team {
       --icon-size: 20px;
     }
     .col-items app-game-icon {
-      border: 1px solid var(--ink);
+      border: 1px solid var(--line);
     }
     .trinket {
       --icon-radius: 50%;

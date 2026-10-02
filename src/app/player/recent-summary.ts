@@ -55,9 +55,9 @@ import { ChampionList } from './champion-list';
       }
     }
     .panel {
-      background: var(--cream);
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
+      background: var(--paper-light);
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
       border-radius: 8px;
       padding: 8px 10px;
       min-width: 0;
@@ -119,9 +119,9 @@ import { ChampionList } from './champion-list';
     }
     .role-bar {
       height: 9px;
-      border: 2px solid var(--ink);
+      border: 2px solid var(--line);
       border-radius: 99px;
-      background: var(--slot);
+      background: var(--paper-deep);
       overflow: hidden;
     }
     .role-fill {
@@ -168,7 +168,7 @@ export class RecentSummary {
     };
   });
 
-  private readonly roleColors = ['var(--c-red)', 'var(--c-green)', 'var(--c-purple)', 'var(--c-orange)', 'var(--peri-deep)'];
+  private readonly roleColors = ['var(--coral)', 'var(--green)', 'var(--purple)', 'var(--mustard)', 'var(--periwinkle)'];
   protected readonly roles = computed(() => {
     const g = this.games();
     return POSITIONS.map((p, i) => {

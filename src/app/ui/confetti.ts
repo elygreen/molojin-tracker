@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, inject, viewChild } from '@angular/core';
 
-const COLORS = ['#e2553f', '#f2a03d', '#6cbf6a', '#8f6ad6', '#6f8fe0', '#fce9a6', '#93b4f5'];
+const COLORS = ['#d95f4b', '#f9bf4e', '#19a260', '#8e5bd6', '#6b91fe', '#fee5a6', '#fd714d'];
 
 interface Piece {
   x: number;

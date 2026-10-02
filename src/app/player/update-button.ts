@@ -38,33 +38,29 @@ export type UpdateState =
       letter-spacing: 0.05em;
       text-transform: uppercase;
       white-space: nowrap;
-      color: #fff;
-      background: var(--win-ink);
-      border: var(--line) solid var(--ink);
-      border-radius: 8px;
+      color: var(--paper-light);
+      background: var(--coral);
+      border: 2.5px solid var(--line);
+      border-radius: 10px;
       padding: 4px 14px;
-      box-shadow: 0 3px 0 var(--ink);
+      box-shadow: var(--shadow-sm);
       cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.1s;
+      transition: transform 80ms, box-shadow 80ms;
     }
     button:hover:not(:disabled) {
-      transform: translateY(1px);
-      box-shadow: 0 2px 0 var(--ink);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--line);
     }
     button:active:not(:disabled) {
-      transform: translateY(3px);
-      box-shadow: 0 0 0 var(--ink);
+      transform: translate(3px, 3px);
+      box-shadow: none;
     }
     button:disabled {
       cursor: default;
       opacity: 0.6;
     }
-    button:focus-visible {
-      outline: 3px solid var(--peri-deep);
-      outline-offset: 2px;
-    }
     button.error {
-      background: var(--loss-ink);
+      background: var(--red);
     }
     .icon {
       display: inline-block;

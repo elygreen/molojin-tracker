@@ -186,7 +186,7 @@ interface Point {
       stroke-linecap: round;
     }
     .dot {
-      stroke: var(--cream);
+      stroke: var(--paper-light);
       stroke-width: 2;
       fill: var(--ink);
     }
@@ -205,8 +205,8 @@ interface Point {
       max-width: 80%;
       text-align: center;
       font-size: 0.75rem;
-      background: var(--cream);
-      border: 2px solid var(--ink);
+      background: var(--paper-light);
+      border: 2px solid var(--line);
       border-radius: 8px;
       padding: 4px 10px;
     }
@@ -218,12 +218,12 @@ interface Point {
       gap: 1px;
       pointer-events: none;
       white-space: nowrap;
-      background: var(--cream);
-      border: 2px solid var(--ink);
+      background: var(--paper-light);
+      border: 2px solid var(--line);
       border-radius: 8px;
       padding: 5px 9px;
       font-size: 0.72rem;
-      box-shadow: 0 3px 0 var(--ink);
+      box-shadow: var(--shadow-sm);
       z-index: 2;
     }
     .tip.flip {

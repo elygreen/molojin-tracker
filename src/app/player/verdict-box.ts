@@ -66,9 +66,9 @@ const SHORT_ROLE: Record<string, string> = { TOP: 'Top', JUNGLE: 'Jg', MIDDLE: '
       justify-content: center;
       gap: 3px;
       padding: 6px 4px;
-      background: var(--cream);
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
+      background: var(--paper-light);
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
       border-radius: 8px;
       border-top-width: 6px;
       text-align: center;
@@ -80,9 +80,6 @@ const SHORT_ROLE: Record<string, string> = { TOP: 'Top', JUNGLE: 'Jg', MIDDLE: '
     }
     :host(.against) {
       border-top-color: var(--loss-ink);
-    }
-    :host(:focus-visible) {
-      box-shadow: 0 0 0 3px var(--peri-deep);
     }
     .label {
       font-family: var(--font-display);
@@ -102,12 +99,12 @@ const SHORT_ROLE: Record<string, string> = { TOP: 'Top', JUNGLE: 'Jg', MIDDLE: '
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      border: 1.5px solid var(--ink);
+      border: 1.5px solid var(--line);
       border-radius: 99px;
       padding: 0 6px;
     }
     .tag.carry {
-      background: var(--c-orange);
+      background: var(--mustard);
     }
     .tag.deserved {
       background: var(--loss-ink);
@@ -127,10 +124,10 @@ const SHORT_ROLE: Record<string, string> = { TOP: 'Top', JUNGLE: 'Jg', MIDDLE: '
       z-index: 5;
       width: 290px;
       text-align: left;
-      background: var(--cream);
-      border: 2px solid var(--ink);
+      background: var(--paper-light);
+      border: 2px solid var(--line);
       border-radius: 8px;
-      box-shadow: 0 3px 0 var(--ink);
+      box-shadow: var(--shadow-sm);
       padding: 8px 10px;
       font-size: 0.7rem;
     }

@@ -103,7 +103,7 @@ function seeded(i: number): number {
       --icon-radius: 10px;
     }
     .avatar app-game-icon {
-      border: var(--line) solid var(--ink);
+      border: 2.5px solid var(--line);
     }
     .level {
       position: absolute;
@@ -137,8 +137,8 @@ function seeded(i: number): number {
     }
     .rank {
       background: var(--butter);
-      border: var(--line) solid var(--ink);
-      box-shadow: var(--pop-sm);
+      border: 2.5px solid var(--line);
+      box-shadow: var(--shadow-sm);
       border-radius: 8px;
       padding: 8px 10px 10px;
     }
@@ -284,7 +284,7 @@ function seeded(i: number): number {
     .bar {
       margin-top: 4px;
       height: 8px;
-      border: 2px solid var(--ink);
+      border: 2px solid var(--line);
       border-radius: 99px;
       background: var(--loss);
       overflow: hidden;
@@ -292,7 +292,7 @@ function seeded(i: number): number {
     .fill {
       height: 100%;
       background: var(--win);
-      border-right: 2px solid var(--ink);
+      border-right: 2px solid var(--line);
     }
     .unranked {
       margin: 0;
@@ -309,7 +309,7 @@ export class ProfileCard {
     const r = this.rank();
     return r ? rankLabel(r.tier, r.rank) : '';
   });
-  protected readonly tierColor = computed(() => TIER_COLORS[this.rank()?.tier ?? ''] ?? 'var(--slot)');
+  protected readonly tierColor = computed(() => TIER_COLORS[this.rank()?.tier ?? ''] ?? 'var(--paper-deep)');
   protected readonly emblemText = computed(() => {
     const r = this.rank();
     if (!r) return '';
