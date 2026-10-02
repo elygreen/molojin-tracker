@@ -27,6 +27,12 @@ export class App {
     { initialValue: '' },
   );
 
+  /** How far from Masters the countdown is, for its color: 1 at 12 or more wins away, 0 at one. */
+  protected readonly heat = computed(() => {
+    const wins = this.masters.winsLeft() ?? 12;
+    return (Math.min(12, Math.max(1, wins)) - 1) / 11;
+  });
+
   /** The player whose page is open; the title's name chip will become the player switcher. */
   protected readonly current = computed<PlayerConfig | null>(() => {
     const players = this.players() ?? [];

@@ -10,9 +10,11 @@
       <div class="goal hit" role="status">{{ current()?.gameName ?? 'Player' }} hit masters!</div>
     } @else if (masters.winsLeft() !== null) {
       <div class="goal" [title]="masters.lpLeft() + ' LP to go at about +' + lpPerWin + ' a win'">
-        <span class="goal-label">Wins to Masters</span>
-        <span class="goal-count">{{ masters.winsLeft() }}</span>
-        <span class="goal-sub">{{ masters.lpLeft() }} LP to go</span>
+        <div class="goal-text">
+          <span class="goal-label">Wins to Masters</span>
+          <span class="goal-sub">{{ masters.lpLeft() }} LP to go</span>
+        </div>
+        <span class="goal-count" [style.--heat]="heat()">{{ masters.winsLeft() }}</span>
       </div>
     }
   </header>

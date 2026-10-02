@@ -42,37 +42,51 @@
   }
 }
 
-// Countdown to Masters on the right of the title.
+// Countdown to Masters on the right of the title: a text panel, then the number in its own square.
 .goal {
   flex: none;
-  display: grid;
-  grid-template-columns: auto auto;
-  align-items: center;
-  column-gap: 10px;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  text-align: left;
+}
+.goal-text,
+.goal-count {
   background: var(--paper-light);
   border: 2.5px solid var(--line);
   border-radius: 10px;
-  padding: 6px 12px;
   box-shadow: var(--shadow-sm);
-  text-align: left;
+}
+.goal-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6px 14px;
 }
 .goal-label {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.45rem;
+  line-height: 1.15;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-.goal-count {
-  grid-row: span 2;
-  font-family: var(--font-display);
-  font-size: 2.8rem;
-  line-height: 1;
-  color: var(--win-ink);
-}
 .goal-sub {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  font-weight: 700;
   color: var(--ink-soft);
+}
+// Red at 12 or more wins away, through orange and yellow, to green at one (--heat runs 0 to 1).
+.goal-count {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  min-width: 72px;
+  padding: 0 8px;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 1;
+  color: color-mix(in oklch, var(--red) calc(var(--heat, 1) * 100%), var(--green));
 }
 .goal.hit {
   display: block;
@@ -84,6 +98,8 @@
   text-transform: uppercase;
   padding: 8px 18px;
   box-shadow: var(--shadow);
+  border: 2.5px solid var(--line);
+  border-radius: 10px;
   animation: shake 0.9s ease-in-out infinite alternate;
 }
 // A smooth side-to-side sway with a gentle hop and pulse.

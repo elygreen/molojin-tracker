@@ -80,6 +80,12 @@ export class DdragonService {
     return `${CDN}/${this.version()}/img/champion/${file}.png`;
   }
 
+  /** The tall loading-screen art, for portraits. */
+  championPortrait(name: string): string {
+    const file = name === 'FiddleSticks' ? 'Fiddlesticks' : name;
+    return `${CDN}/img/champion/loading/${file}_0.jpg`;
+  }
+
   item(id: number): string | null {
     return id ? `${CDN}/${this.version()}/img/item/${id}.png` : null;
   }

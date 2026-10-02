@@ -6,7 +6,7 @@ export type UpdateState =
   | { kind: 'done'; added: number }
   | { kind: 'error'; message: string };
 
-/** The ↻ Update button next to the match history title. */
+/** The ↻ Refresh button beside the OP.GG link. */
 @Component({
   selector: 'app-update-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,13 +100,13 @@ export class UpdateButton {
     const s = this.state();
     switch (s.kind) {
       case 'loading':
-        return 'Updating…';
+        return 'Refreshing…';
       case 'done':
         return s.added ? `+${s.added} new` : 'Up to date';
       case 'error':
         return 'Retry';
       default:
-        return 'Update';
+        return 'Refresh';
     }
   });
 

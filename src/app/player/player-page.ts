@@ -12,6 +12,8 @@ import { MatchDetails } from './match-details';
 import { MatchCard } from './match-card';
 import { ProfileCard } from './profile-card';
 import { RecentSummary } from './recent-summary';
+import { SessionPanel } from './session-panel';
+import { TopChampions } from './top-champions';
 import { UpdateButton, UpdateState } from './update-button';
 import { VerdictBox } from './verdict-box';
 
@@ -21,7 +23,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-player-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionTitle, ProfileCard, RecentSummary, MatchCard, MatchDetails, LpChart, VerdictBox, UpdateButton],
+  imports: [SectionTitle, ProfileCard, RecentSummary, SessionPanel, TopChampions, MatchCard, MatchDetails, LpChart, VerdictBox, UpdateButton],
   template: `
     @switch (state().status) {
       @case ('loading') {
@@ -40,7 +42,9 @@ const PAGE_SIZE = 20;
       @case ('ready') {
         @let d = data()!;
         <section class="card profile" aria-label="Profile and rank">
-          <app-profile-card [data]="d" />
+          <app-profile-card [data]="d">
+            <app-update-button [state]="updateState()" [enabled]="canUpdate()" (pressed)="update()" />
+          </app-profile-card>
         </section>
 
         <section class="lp-section" aria-label="LP over time">
@@ -53,8 +57,16 @@ const PAGE_SIZE = 20;
           <section aria-label="Recent form">
             <app-recent-summary [matches]="d.matches" />
           </section>
+          <section aria-label="Current session">
+            <app-session-panel [data]="d" />
+          </section>
         </aside>
 
+        <section class="champions" aria-label="Most played champions">
+          <app-top-champions [matches]="d.matches" />
+        </section>
+
+        <!-- Match history (and its verdict boxes) is hidden for now.
         <section class="history">
           <div class="history-head">
             <app-section-title class="tall" text="Match history" [showTile]="false" />
@@ -94,6 +106,7 @@ const PAGE_SIZE = 20;
             </button>
           }
         </section>
+        -->
       }
     }
   `,
@@ -122,6 +135,9 @@ const PAGE_SIZE = 20;
       .stats {
         position: static;
       }
+    }
+    .champions {
+      min-width: 0;
     }
     .history {
       min-width: 0;

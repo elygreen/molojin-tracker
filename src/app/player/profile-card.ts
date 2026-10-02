@@ -7,6 +7,8 @@ import { GameIcon } from '../ui/game-icon';
 // Master and up alternates purple and pink sparkles, 8 of each.
 const SPARKLE_COUNT: Record<string, number> = { emerald: 6, diamond: 11, apex: 16 };
 
+const OPGG_REGIONS: Record<string, string> = { eun1: 'eune', la1: 'lan', la2: 'las', oc1: 'oce' };
+
 /** Fixed pseudo-random numbers so sparkles stay put between renders. */
 function seeded(i: number): number {
   const x = Math.sin(i * 12.9898) * 43758.5453;
@@ -82,6 +84,14 @@ function seeded(i: number): number {
           <span class="queue-label">SoloQ</span>
         </div>
       }
+    </div>
+
+    <div class="actions">
+      <a class="opgg" [href]="opgg()" target="_blank" rel="noopener">
+        OP.GG <span aria-hidden="true">↗</span>
+      </a>
+      <!-- The page's refresh button. -->
+      <ng-content />
     </div>
   `,
   styles: `
@@ -298,6 +308,39 @@ function seeded(i: number): number {
       margin: 0;
       font-weight: 600;
     }
+    .actions {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .opgg {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px 4px;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--paper-light);
+      background: var(--cobalt);
+      border: 2.5px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition:
+        transform 80ms,
+        box-shadow 80ms;
+    }
+    .opgg:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--line);
+    }
+    .opgg:active {
+      transform: translate(3px, 3px);
+      box-shadow: none;
+    }
   `,
 })
 export class ProfileCard {
@@ -341,6 +384,13 @@ export class ProfileCard {
   protected readonly wr = computed(() => {
     const r = this.rank();
     return r ? winRate(r.wins, r.wins + r.losses) : 0;
+  });
+  protected readonly opgg = computed(() => {
+    const p = this.data().profile;
+    const platform = p.platform.toLowerCase();
+    // op.gg names regions without the platform's number (na1 → na), with a few of its own.
+    const region = OPGG_REGIONS[platform] ?? platform.replace(/\d+$/, '');
+    return `https://op.gg/lol/summoners/${region}/${encodeURIComponent(p.gameName)}-${encodeURIComponent(p.tagLine)}`;
   });
   protected readonly updated = computed(() => timeAgo(Date.parse(this.data().updatedAt)));
 }
